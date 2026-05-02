@@ -13,6 +13,8 @@ import { useLocalizedHref } from "@/lib/routing";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Index = () => {
+  const { t } = useTranslation();
+  const localized = useLocalizedHref();
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<HTMLImageElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

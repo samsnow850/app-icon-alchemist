@@ -295,8 +295,22 @@ const Index = () => {
           </div>
         </div>
 
-        <footer className="mt-20 text-center text-xs text-muted-foreground">
-          Built for designers and developers · All processing happens in your browser
+        <footer className="mt-20 space-y-3 text-center">
+          <div className="mx-auto inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full border border-border bg-card/60 px-4 py-2 text-xs font-medium text-foreground backdrop-blur">
+            <span className="inline-flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              100% free
+            </span>
+            <span className="opacity-40">·</span>
+            <span>No ads</span>
+            <span className="opacity-40">·</span>
+            <span>No signup</span>
+            <span className="opacity-40">·</span>
+            <span>No payments</span>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Built for designers and developers · All processing happens in your browser
+          </p>
         </footer>
       </div>
     </div>

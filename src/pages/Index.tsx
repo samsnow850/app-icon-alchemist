@@ -263,14 +263,14 @@ const Index = () => {
             {/* Name */}
             <div className="rounded-[2rem] border border-border bg-card p-6">
               <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/60">
-                File name
+                {t("name.label")}
               </Label>
-              <p className="mt-1 text-xs text-foreground/60">Used as the zip name and root folder.</p>
+              <p className="mt-1 text-xs text-foreground/60">{t("name.hint")}</p>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="AppIcon"
+                placeholder={t("name.placeholder")}
                 className="mt-3 h-12 rounded-full border-border bg-background px-5"
               />
             </div>

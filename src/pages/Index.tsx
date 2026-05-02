@@ -103,6 +103,22 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background bg-gradient-mesh">
+      {/* Free banner */}
+      <div className="w-full bg-gradient-primary text-primary-foreground">
+        <div className="container flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-2 text-center text-xs font-medium md:text-sm">
+          <span className="inline-flex items-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5" />
+            100% free & open to everyone
+          </span>
+          <span className="opacity-60">·</span>
+          <span>No ads</span>
+          <span className="opacity-60">·</span>
+          <span>No signup</span>
+          <span className="opacity-60">·</span>
+          <span>No payments — ever</span>
+        </div>
+      </div>
+
       <div className="container max-w-6xl py-12 md:py-20">
         {/* Header */}
         <header className="mb-12 text-center">
@@ -114,7 +130,7 @@ const Index = () => {
             <span className="text-gradient">App Icon</span> Generator
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-balance text-base text-muted-foreground md:text-lg">
-            Drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android — {TOTAL_ICONS} icons in seconds.
+            A free, public tool — drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android. {TOTAL_ICONS} icons in seconds, no strings attached.
           </p>
         </header>
 

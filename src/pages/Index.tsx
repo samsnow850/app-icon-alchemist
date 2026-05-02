@@ -223,9 +223,9 @@ const Index = () => {
                 <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary">
                   <Upload className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <p className="font-display text-2xl font-semibold tracking-tight">Drop your icon here</p>
-                <p className="mt-2 text-sm text-foreground/60">PNG · 1024×1024 recommended</p>
-                <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/40">or click to browse</p>
+                <p className="font-display text-2xl font-semibold tracking-tight">{t("dropzone.title")}</p>
+                <p className="mt-2 text-sm text-foreground/60">{t("dropzone.sub")}</p>
+                <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/40">{t("dropzone.browse")}</p>
               </label>
             ) : (
               <div className="rounded-[2rem] border border-border bg-card p-6">

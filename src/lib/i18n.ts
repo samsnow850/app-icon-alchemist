@@ -111,7 +111,7 @@ const resources = {
         generator: "ジェネレーター",
         platforms: "プラットフォーム",
         privacy: "プライバシー",
-        github: "GitHub",
+        github: "GitHubで見る",
       },
       hero: {
         kicker: "無料の公開ツール",

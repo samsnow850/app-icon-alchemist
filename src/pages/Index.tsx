@@ -285,12 +285,12 @@ const Index = () => {
               {busy ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating {progress.current}/{progress.total}…
+                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
                 </>
               ) : (
                 <>
                   <Download className="mr-2 h-4 w-4" />
-                  Generate {totalSelected} icons
+                  {t("hero.ctaGenerate", { count: totalSelected })}
                 </>
               )}
             </Button>

@@ -76,7 +76,7 @@ const Index = () => {
   const handleGenerate = async () => {
     if (!img) return;
     if (selected.size === 0) {
-      toast.error("Select at least one platform.");
+      toast.error(t("toast.selectPlatform"));
       return;
     }
     setBusy(true);
@@ -91,10 +91,10 @@ const Index = () => {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      toast.success(`Generated ${totalSelected} icons!`);
+      toast.success(t("toast.generated", { count: totalSelected }));
     } catch (e) {
       console.error(e);
-      toast.error("Something went wrong while generating.");
+      toast.error(t("toast.genFail"));
     } finally {
       setBusy(false);
     }

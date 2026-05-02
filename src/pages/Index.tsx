@@ -247,7 +247,7 @@ const Index = () => {
                       onClick={reset}
                       className="mt-3 h-8 rounded-full px-3 text-[11px] font-semibold uppercase tracking-wider"
                     >
-                      <X className="mr-1 h-3.5 w-3.5" /> Replace
+                      <X className="mr-1 h-3.5 w-3.5" /> {t("dropzone.replace")}
                     </Button>
                   </div>
                 </div>

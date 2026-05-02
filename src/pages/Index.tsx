@@ -124,24 +124,27 @@ const Index = () => {
           </div>
           <div className="hidden items-center gap-8 md:flex">
             <a href="#generator" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
-              Generator
+              {t("nav.generator")}
             </a>
             <a href="#platforms" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
-              Platforms
+              {t("nav.platforms")}
             </a>
-            <Link to="/privacy" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
-              Privacy
+            <Link to={localized("/privacy")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+              {t("nav.privacy")}
             </Link>
           </div>
-          <a
-            href="https://github.com/samsnow850/app-icon-alchemist"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            GitHub
-            <span aria-hidden>›</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://github.com/samsnow850/app-icon-alchemist"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              {t("nav.github")}
+              <span aria-hidden>›</span>
+            </a>
+            <LanguageSwitcher />
+          </div>
         </div>
       </nav>
 

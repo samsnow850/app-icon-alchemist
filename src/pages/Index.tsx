@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Upload, Download, Image as ImageIcon, Sparkles, Check, X, Loader2, AlertTriangle } from "lucide-react";
+import { Upload, Download, Image as ImageIcon, Sparkles, Check, X, Loader2, AlertTriangle, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -316,6 +316,17 @@ const Index = () => {
             <Link to="/privacy" className="underline-offset-4 hover:text-foreground hover:underline">
               Privacy Policy
             </Link>
+          </p>
+          <p className="pt-2">
+            <a
+              href="https://github.com/samsnow850/app-icon-alchemist"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              <Github className="h-3.5 w-3.5" />
+              Free and open source on GitHub
+            </a>
           </p>
         </footer>
       </div>

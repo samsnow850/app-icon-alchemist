@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { Upload, Download, Image as ImageIcon, Sparkles, Check, X, Loader2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -310,6 +311,11 @@ const Index = () => {
           </div>
           <p className="text-xs text-muted-foreground">
             Built for designers and developers · All processing happens in your browser
+          </p>
+          <p className="text-xs text-muted-foreground">
+            <Link to="/privacy" className="underline-offset-4 hover:text-foreground hover:underline">
+              Privacy Policy
+            </Link>
           </p>
         </footer>
       </div>

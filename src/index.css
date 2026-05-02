@@ -49,7 +49,7 @@
     --input: 140 12% 80%;
     --ring: 160 25% 16%;
 
-    --radius: 9999px;
+    --radius: 1.25rem;
 
     /* Subtle, restrained gradients (Zoox uses near-flat color) */
     --gradient-primary: linear-gradient(180deg, hsl(160 25% 16%), hsl(160 25% 12%));

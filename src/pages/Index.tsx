@@ -153,16 +153,16 @@ const Index = () => {
         <header className="mb-20 text-center">
           <div className="mb-8 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/70">
             <span className="h-px w-8 bg-foreground/40" />
-            Free public tool
+            {t("hero.kicker")}
             <span className="h-px w-8 bg-foreground/40" />
           </div>
           <h1 className="mx-auto max-w-4xl text-balance font-display text-5xl font-semibold leading-[0.95] tracking-tight text-foreground md:text-7xl lg:text-[88px]">
-            One icon.
+            {t("hero.titleLine1")}
             <br />
-            Every platform.
+            {t("hero.titleLine2")}
           </h1>
           <p className="mx-auto mt-8 max-w-xl text-balance text-base text-foreground/70 md:text-lg">
-            Drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android — {TOTAL_ICONS} icons in seconds.
+            {t("hero.subtitle", { count: TOTAL_ICONS })}
           </p>
           <div className="mt-10 flex flex-col items-center gap-4">
             <Button
@@ -174,22 +174,22 @@ const Index = () => {
               {busy ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating {progress.current}/{progress.total}…
+                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
                 </>
               ) : img ? (
                 <>
-                  Generate {totalSelected} icons
+                  {t("hero.ctaGenerate", { count: totalSelected })}
                   <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               ) : (
                 <>
-                  Upload &amp; Generate
+                  {t("hero.ctaUpload")}
                   <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               )}
             </Button>
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/50">
-              No signup · No ads · Runs in your browser
+              {t("hero.finePrint")}
             </p>
           </div>
         </header>

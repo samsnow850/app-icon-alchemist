@@ -124,14 +124,40 @@ const Index = () => {
         <header className="mb-12 text-center">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
-            One icon → every platform
+            Free public tool · One icon → every platform
           </div>
           <h1 className="text-balance text-5xl font-bold tracking-tight md:text-6xl">
             <span className="text-gradient">App Icon</span> Generator
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-balance text-base text-muted-foreground md:text-lg">
-            A free, public tool — drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android. {TOTAL_ICONS} icons in seconds, no strings attached.
+            Drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android — {TOTAL_ICONS} icons in seconds.
           </p>
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <Button
+              size="lg"
+              onClick={() => (img ? handleGenerate() : inputRef.current?.click())}
+              disabled={busy}
+              className="h-14 rounded-2xl bg-gradient-primary px-8 text-base font-semibold shadow-elegant transition-all hover:shadow-glow"
+            >
+              {busy ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Generating {progress.current}/{progress.total}…
+                </>
+              ) : img ? (
+                <>
+                  <Download className="mr-2 h-5 w-5" />
+                  Generate {totalSelected} icons
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-2 h-5 w-5" />
+                  Upload &amp; Generate
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-muted-foreground">Free forever · No signup · Runs in your browser</p>
+          </div>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-5">

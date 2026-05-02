@@ -330,7 +330,7 @@ const Index = () => {
             <div className="mt-4 flex items-center justify-between rounded-2xl bg-primary p-5 text-primary-foreground">
               <div className="flex items-center gap-2">
                 <Check className="h-4 w-4" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">Total icons</span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">{t("platforms.total")}</span>
               </div>
               <span className="font-display text-3xl font-semibold tabular-nums">{totalSelected}</span>
             </div>

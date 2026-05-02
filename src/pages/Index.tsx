@@ -299,7 +299,7 @@ const Index = () => {
           {/* Right: Platform cards */}
           <div id="platforms" className="space-y-2 lg:col-span-2">
             <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/60">
-              Platforms
+              {t("platforms.title")}
             </p>
             {PLATFORMS.map((p) => {
               const on = selected.has(p.id);

@@ -312,6 +312,11 @@ const Index = () => {
           <p className="text-xs text-muted-foreground">
             Built for designers and developers · All processing happens in your browser
           </p>
+          <p className="text-xs text-muted-foreground">
+            <Link to="/privacy" className="underline-offset-4 hover:text-foreground hover:underline">
+              Privacy Policy
+            </Link>
+          </p>
         </footer>
       </div>
     </div>

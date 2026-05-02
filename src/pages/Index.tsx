@@ -317,6 +317,17 @@ const Index = () => {
               Privacy Policy
             </Link>
           </p>
+          <p className="pt-2">
+            <a
+              href="https://github.com/samsnow850/app-icon-alchemist"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              <Github className="h-3.5 w-3.5" />
+              Free and open source on GitHub
+            </a>
+          </p>
         </footer>
       </div>
     </div>

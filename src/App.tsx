@@ -6,8 +6,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { useLanguageSync } from "./lib/routing";
 
 const queryClient = new QueryClient();
+
+const LanguageSync = ({ children }: { children: React.ReactNode }) => {
+  useLanguageSync();
+  return <>{children}</>;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -15,12 +21,20 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/privacy" element={<Privacy />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <LanguageSync>
+          <Routes>
+            {/* English (default, no prefix) */}
+            <Route path="/" element={<Index />} />
+            <Route path="/privacy" element={<Privacy />} />
+
+            {/* Localized routes */}
+            <Route path="/:lang" element={<Index />} />
+            <Route path="/:lang/privacy" element={<Privacy />} />
+
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </LanguageSync>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

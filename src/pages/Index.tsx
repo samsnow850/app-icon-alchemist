@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Upload, Download, Image as ImageIcon, Check, X, Loader2, AlertTriangle, Github } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,8 +9,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
 import { generateZip, loadImage } from "@/lib/iconGenerator";
+import { useLocalizedHref } from "@/lib/routing";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Index = () => {
+  const { t } = useTranslation();
+  const localized = useLocalizedHref();
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<HTMLImageElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -23,7 +28,7 @@ const Index = () => {
 
   const handleFile = useCallback(async (f: File) => {
     if (!f.type.startsWith("image/")) {
-      toast.error("Please choose an image file (PNG recommended).");
+      toast.error(t("toast.chooseImage"));
       return;
     }
     try {
@@ -34,14 +39,15 @@ const Index = () => {
       const baseName = f.name.replace(/\.[^.]+$/, "");
       setName(baseName || "AppIcon");
       if (image.width !== 1024 || image.height !== 1024) {
-        setWarning(`Your image is ${image.width}×${image.height}. For best results, upload a square 1024×1024 image. We'll still generate, but quality may suffer.`);
+        setWarning(t("dropzone.warning", { w: image.width, h: image.height }));
       } else {
         setWarning(null);
       }
     } catch {
-      toast.error("Could not load that image.");
+      toast.error(t("toast.loadFail"));
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t]);
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {
@@ -70,7 +76,7 @@ const Index = () => {
   const handleGenerate = async () => {
     if (!img) return;
     if (selected.size === 0) {
-      toast.error("Select at least one platform.");
+      toast.error(t("toast.selectPlatform"));
       return;
     }
     setBusy(true);
@@ -85,10 +91,10 @@ const Index = () => {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      toast.success(`Generated ${totalSelected} icons!`);
+      toast.success(t("toast.generated", { count: totalSelected }));
     } catch (e) {
       console.error(e);
-      toast.error("Something went wrong while generating.");
+      toast.error(t("toast.genFail"));
     } finally {
       setBusy(false);
     }
@@ -118,24 +124,27 @@ const Index = () => {
           </div>
           <div className="hidden items-center gap-8 md:flex">
             <a href="#generator" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
-              Generator
+              {t("nav.generator")}
             </a>
             <a href="#platforms" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
-              Platforms
+              {t("nav.platforms")}
             </a>
-            <Link to="/privacy" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
-              Privacy
+            <Link to={localized("/privacy")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+              {t("nav.privacy")}
             </Link>
           </div>
-          <a
-            href="https://github.com/samsnow850/app-icon-alchemist"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            GitHub
-            <span aria-hidden>›</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://github.com/samsnow850/app-icon-alchemist"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              {t("nav.github")}
+              <span aria-hidden>›</span>
+            </a>
+            <LanguageSwitcher />
+          </div>
         </div>
       </nav>
 
@@ -144,16 +153,16 @@ const Index = () => {
         <header className="mb-20 text-center">
           <div className="mb-8 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/70">
             <span className="h-px w-8 bg-foreground/40" />
-            Free public tool
+            {t("hero.kicker")}
             <span className="h-px w-8 bg-foreground/40" />
           </div>
           <h1 className="mx-auto max-w-4xl text-balance font-display text-5xl font-semibold leading-[0.95] tracking-tight text-foreground md:text-7xl lg:text-[88px]">
-            One icon.
+            {t("hero.titleLine1")}
             <br />
-            Every platform.
+            {t("hero.titleLine2")}
           </h1>
           <p className="mx-auto mt-8 max-w-xl text-balance text-base text-foreground/70 md:text-lg">
-            Drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android — {TOTAL_ICONS} icons in seconds.
+            {t("hero.subtitle", { count: TOTAL_ICONS })}
           </p>
           <div className="mt-10 flex flex-col items-center gap-4">
             <Button
@@ -165,22 +174,22 @@ const Index = () => {
               {busy ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating {progress.current}/{progress.total}…
+                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
                 </>
               ) : img ? (
                 <>
-                  Generate {totalSelected} icons
+                  {t("hero.ctaGenerate", { count: totalSelected })}
                   <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               ) : (
                 <>
-                  Upload &amp; Generate
+                  {t("hero.ctaUpload")}
                   <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               )}
             </Button>
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/50">
-              No signup · No ads · Runs in your browser
+              {t("hero.finePrint")}
             </p>
           </div>
         </header>
@@ -214,9 +223,9 @@ const Index = () => {
                 <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary">
                   <Upload className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <p className="font-display text-2xl font-semibold tracking-tight">Drop your icon here</p>
-                <p className="mt-2 text-sm text-foreground/60">PNG · 1024×1024 recommended</p>
-                <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/40">or click to browse</p>
+                <p className="font-display text-2xl font-semibold tracking-tight">{t("dropzone.title")}</p>
+                <p className="mt-2 text-sm text-foreground/60">{t("dropzone.sub")}</p>
+                <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/40">{t("dropzone.browse")}</p>
               </label>
             ) : (
               <div className="rounded-[2rem] border border-border bg-card p-6">
@@ -238,7 +247,7 @@ const Index = () => {
                       onClick={reset}
                       className="mt-3 h-8 rounded-full px-3 text-[11px] font-semibold uppercase tracking-wider"
                     >
-                      <X className="mr-1 h-3.5 w-3.5" /> Replace
+                      <X className="mr-1 h-3.5 w-3.5" /> {t("dropzone.replace")}
                     </Button>
                   </div>
                 </div>
@@ -254,14 +263,14 @@ const Index = () => {
             {/* Name */}
             <div className="rounded-[2rem] border border-border bg-card p-6">
               <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/60">
-                File name
+                {t("name.label")}
               </Label>
-              <p className="mt-1 text-xs text-foreground/60">Used as the zip name and root folder.</p>
+              <p className="mt-1 text-xs text-foreground/60">{t("name.hint")}</p>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="AppIcon"
+                placeholder={t("name.placeholder")}
                 className="mt-3 h-12 rounded-full border-border bg-background px-5"
               />
             </div>
@@ -276,12 +285,12 @@ const Index = () => {
               {busy ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating {progress.current}/{progress.total}…
+                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
                 </>
               ) : (
                 <>
                   <Download className="mr-2 h-4 w-4" />
-                  Generate {totalSelected} icons
+                  {t("hero.ctaGenerate", { count: totalSelected })}
                 </>
               )}
             </Button>
@@ -290,7 +299,7 @@ const Index = () => {
           {/* Right: Platform cards */}
           <div id="platforms" className="space-y-2 lg:col-span-2">
             <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/60">
-              Platforms
+              {t("platforms.title")}
             </p>
             {PLATFORMS.map((p) => {
               const on = selected.has(p.id);
@@ -321,7 +330,7 @@ const Index = () => {
             <div className="mt-4 flex items-center justify-between rounded-2xl bg-primary p-5 text-primary-foreground">
               <div className="flex items-center gap-2">
                 <Check className="h-4 w-4" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">Total icons</span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">{t("platforms.total")}</span>
               </div>
               <span className="font-display text-3xl font-semibold tabular-nums">{totalSelected}</span>
             </div>
@@ -332,18 +341,18 @@ const Index = () => {
           <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
             <div>
               <p className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
-                Free, forever.
+                {t("footer.heading")}
               </p>
               <p className="mt-2 max-w-md text-sm text-foreground/60">
-                A public tool for designers and developers. No ads, no signup, no payments — every pixel processed in your browser.
+                {t("footer.body")}
               </p>
             </div>
             <div className="flex flex-col items-start gap-3 md:items-end">
               <Link
-                to="/privacy"
+                to={localized("/privacy")}
                 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/70 hover:text-foreground"
               >
-                Privacy Policy
+                {t("footer.privacy")}
               </Link>
               <a
                 href="https://github.com/samsnow850/app-icon-alchemist"
@@ -352,7 +361,7 @@ const Index = () => {
                 className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/70 hover:text-foreground"
               >
                 <Github className="h-3.5 w-3.5" />
-                Free and open source on GitHub
+                {t("footer.github")}
               </a>
             </div>
           </div>

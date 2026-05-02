@@ -28,7 +28,7 @@ const Index = () => {
 
   const handleFile = useCallback(async (f: File) => {
     if (!f.type.startsWith("image/")) {
-      toast.error("Please choose an image file (PNG recommended).");
+      toast.error(t("toast.chooseImage"));
       return;
     }
     try {
@@ -39,14 +39,15 @@ const Index = () => {
       const baseName = f.name.replace(/\.[^.]+$/, "");
       setName(baseName || "AppIcon");
       if (image.width !== 1024 || image.height !== 1024) {
-        setWarning(`Your image is ${image.width}×${image.height}. For best results, upload a square 1024×1024 image. We'll still generate, but quality may suffer.`);
+        setWarning(t("dropzone.warning", { w: image.width, h: image.height }));
       } else {
         setWarning(null);
       }
     } catch {
-      toast.error("Could not load that image.");
+      toast.error(t("toast.loadFail"));
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t]);
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {

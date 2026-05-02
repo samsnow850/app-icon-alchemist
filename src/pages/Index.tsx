@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Upload, Download, Image as ImageIcon, Check, X, Loader2, AlertTriangle, Github } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
 import { generateZip, loadImage } from "@/lib/iconGenerator";
+import { useLocalizedHref } from "@/lib/routing";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);

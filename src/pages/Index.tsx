@@ -103,61 +103,85 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background bg-gradient-mesh">
-      {/* Free banner */}
-      <div className="w-full bg-gradient-primary text-primary-foreground">
-        <div className="container flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-2 text-center text-xs font-medium md:text-sm">
-          <span className="inline-flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5" />
-            100% free & open to everyone
-          </span>
-          <span className="opacity-60">·</span>
-          <span>No ads</span>
-          <span className="opacity-60">·</span>
-          <span>No signup</span>
-          <span className="opacity-60">·</span>
-          <span>No payments — ever</span>
-        </div>
-      </div>
-
-      <div className="container max-w-6xl py-12 md:py-20">
-        {/* Header */}
-        <header className="mb-12 text-center">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            Free public tool · One icon → every platform
+    <div className="min-h-screen bg-background">
+      {/* Top nav — Zoox-style minimal */}
+      <nav className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur">
+        <div className="container flex h-16 items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="grid grid-cols-2 gap-0.5">
+              <span className="h-2 w-2 rounded-sm bg-foreground" />
+              <span className="h-2 w-2 rounded-sm bg-foreground/30" />
+              <span className="h-2 w-2 rounded-sm bg-foreground/30" />
+              <span className="h-2 w-2 rounded-sm bg-foreground" />
+            </div>
+            <span className="text-sm font-semibold tracking-tight">Icon Forge</span>
           </div>
-          <h1 className="text-balance text-5xl font-bold tracking-tight md:text-6xl">
-            <span className="text-gradient">App Icon</span> Generator
+          <div className="hidden items-center gap-8 md:flex">
+            <a href="#generator" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+              Generator
+            </a>
+            <a href="#platforms" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+              Platforms
+            </a>
+            <Link to="/privacy" className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+              Privacy
+            </Link>
+          </div>
+          <a
+            href="https://github.com/samsnow850/app-icon-alchemist"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            GitHub
+            <span aria-hidden>›</span>
+          </a>
+        </div>
+      </nav>
+
+      <div className="container max-w-6xl py-16 md:py-28">
+        {/* Editorial hero */}
+        <header className="mb-20 text-center">
+          <div className="mb-8 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/70">
+            <span className="h-px w-8 bg-foreground/40" />
+            Free public tool
+            <span className="h-px w-8 bg-foreground/40" />
+          </div>
+          <h1 className="mx-auto max-w-4xl text-balance font-display text-5xl font-semibold leading-[0.95] tracking-tight text-foreground md:text-7xl lg:text-[88px]">
+            One icon.
+            <br />
+            Every platform.
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-balance text-base text-muted-foreground md:text-lg">
+          <p className="mx-auto mt-8 max-w-xl text-balance text-base text-foreground/70 md:text-lg">
             Drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android — {TOTAL_ICONS} icons in seconds.
           </p>
-          <div className="mt-8 flex flex-col items-center gap-3">
+          <div className="mt-10 flex flex-col items-center gap-4">
             <Button
               size="lg"
               onClick={() => (img ? handleGenerate() : inputRef.current?.click())}
               disabled={busy}
-              className="h-14 rounded-2xl bg-gradient-primary px-8 text-base font-semibold shadow-elegant transition-all hover:shadow-glow"
+              className="group h-14 rounded-full bg-primary px-8 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-elegant transition-all hover:bg-primary/90"
             >
               {busy ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Generating {progress.current}/{progress.total}…
                 </>
               ) : img ? (
                 <>
-                  <Download className="mr-2 h-5 w-5" />
                   Generate {totalSelected} icons
+                  <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               ) : (
                 <>
-                  <Upload className="mr-2 h-5 w-5" />
                   Upload &amp; Generate
+                  <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               )}
             </Button>
-            <p className="text-xs text-muted-foreground">Free forever · No signup · Runs in your browser</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/50">
+              No signup · No ads · Runs in your browser
+            </p>
           </div>
         </header>
 

@@ -78,14 +78,15 @@ export const PLATFORMS: Platform[] = [
   {
     id: "macos",
     label: "macOS",
-    description: "Mac app icons (16, 32, 128, 256, 512 @1x and @2x, plus 1024 marketing)",
-    count: 11,
+    description: "Mac app icons (16, 32, 64, 128, 256, 512 @1x and @2x, plus 1024 marketing)",
+    count: 12,
     folder: "macOS",
     icons: [
       { name: "icon_16x16", size: 16 },
       { name: "icon_16x16@2x", size: 32 },
       { name: "icon_32x32", size: 32 },
       { name: "icon_32x32@2x", size: 64 },
+      { name: "icon_64x64", size: 64 },
       { name: "icon_128x128", size: 128 },
       { name: "icon_128x128@2x", size: 256 },
       { name: "icon_256x256", size: 256 },

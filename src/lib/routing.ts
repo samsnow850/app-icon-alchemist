@@ -75,6 +75,7 @@ export function useSwitchLanguage() {
 
   return (lang: LanguageCode) => {
     const { rest } = parsePath(pathname);
+    setStoredLang(lang);
     navigate(buildPath(lang, rest));
   };
 }

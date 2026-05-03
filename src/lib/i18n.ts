@@ -3,203 +3,825 @@ import { initReactI18next } from "react-i18next";
 
 export const SUPPORTED_LANGUAGES = [
   { code: "en", label: "English", short: "EN", flag: "🇺🇸" },
+  { code: "zh", label: "中文", short: "中文", flag: "🇨🇳" },
+  { code: "es", label: "Español", short: "ES", flag: "🇪🇸" },
+  { code: "ar", label: "العربية", short: "AR", flag: "🇸🇦" },
+  { code: "de", label: "Deutsch", short: "DE", flag: "🇩🇪" },
+  { code: "pt", label: "Português", short: "PT", flag: "🇵🇹" },
+  { code: "fr", label: "Français", short: "FR", flag: "🇫🇷" },
   { code: "ja", label: "日本語", short: "日本語", flag: "🇯🇵" },
-  // Future: { code: "es", label: "Español", short: "ES", flag: "🇪🇸" },
+  { code: "hi", label: "हिन्दी", short: "HI", flag: "🇮🇳" },
+  { code: "ko", label: "한국어", short: "KO", flag: "🇰🇷" },
+  { code: "kk", label: "Қазақша", short: "KK", flag: "🇰🇿" },
 ] as const;
 
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number]["code"];
 
+export const RTL_LANGS: LanguageCode[] = ["ar"];
+
+const LANG_CODES = SUPPORTED_LANGUAGES.map((l) => l.code) as LanguageCode[];
+
+/** Map browser locale (e.g. "pt-BR", "zh-Hant") to a supported code. */
+export function detectBrowserLanguage(): LanguageCode {
+  if (typeof navigator === "undefined") return "en";
+  const candidates = [
+    ...(navigator.languages ?? []),
+    navigator.language,
+  ].filter(Boolean) as string[];
+  for (const raw of candidates) {
+    const lower = raw.toLowerCase();
+    const base = lower.split("-")[0];
+    if ((LANG_CODES as string[]).includes(base)) return base as LanguageCode;
+    // Special cases
+    if (lower.startsWith("zh")) return "zh";
+    if (lower.startsWith("pt")) return "pt";
+  }
+  return "en";
+}
+
+const en = {
+  nav: { generator: "Generator", platforms: "Platforms", privacy: "Privacy", github: "GitHub" },
+  hero: {
+    kicker: "Free public tool",
+    titleLine1: "One icon.",
+    titleLine2: "Every platform.",
+    subtitle:
+      "Drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android — {{count}} icons in seconds.",
+    ctaUpload: "Upload & Generate",
+    ctaGenerate: "Generate {{count}} icons",
+    ctaGenerating: "Generating {{current}}/{{total}}…",
+    finePrint: "No signup · No ads · Runs in your browser",
+  },
+  dropzone: {
+    title: "Drop your icon here",
+    sub: "PNG · 1024×1024 recommended",
+    browse: "or click to browse",
+    replace: "Replace",
+    warning:
+      "Your image is {{w}}×{{h}}. For best results, upload a square 1024×1024 image. We'll still generate, but quality may suffer.",
+  },
+  name: { label: "File name", hint: "Used as the zip name and root folder.", placeholder: "AppIcon" },
+  platforms: { title: "Platforms", total: "Total icons" },
+  footer: {
+    heading: "Free, forever.",
+    body: "A public tool for designers and developers. No ads, no signup, no payments — every pixel processed in your browser.",
+    privacy: "Privacy Policy",
+    github: "Free and open source on GitHub",
+  },
+  lang: { label: "Language" },
+  toast: {
+    chooseImage: "Please choose an image file (PNG recommended).",
+    loadFail: "Could not load that image.",
+    selectPlatform: "Select at least one platform.",
+    generated: "Generated {{count}} icons!",
+    genFail: "Something went wrong while generating.",
+  },
+  privacy: {
+    back: "Back to generator",
+    kicker: "Privacy Policy",
+    title: "Your icons stay <1>on your device</1>.",
+    updated: "Last updated: May 2, 2026",
+    chips: {
+      noSignup: "No signup",
+      noSignupSub: "No accounts, ever.",
+      onDevice: "100% on-device",
+      onDeviceSub: "Images never leave your browser.",
+      noTracking: "No tracking",
+      noTrackingSub: "No ads, no analytics on your files.",
+    },
+    sections: {
+      noSignupTitle: "No signup required",
+      noSignupBody:
+        "The App Icon Generator is a free, public tool. You don't need to create an account, provide an email address, or share any personal information to use it. There are no logins, no profiles, and no paywalls — just open the page and start generating.",
+      handlingTitle: "How your uploaded images are handled",
+      handlingBody:
+        "Every image you drop or select is processed entirely inside your web browser using the HTML Canvas API. Your file is never uploaded to a server, never sent to a third party, and never stored anywhere outside the current browser tab.",
+      bullets: [
+        "Resizing happens locally on your device's CPU/GPU.",
+        "The generated ZIP is built in-memory and downloaded directly to you.",
+        "Closing or refreshing the tab erases everything from memory.",
+        "We don't keep copies, thumbnails, or logs of your icons.",
+      ],
+      dontCollectTitle: "What we don't collect",
+      dontCollectBody:
+        "We don't run advertising trackers, behavioral analytics on your uploads, or fingerprinting scripts. We don't sell data because we don't collect it in the first place.",
+      cookiesTitle: "Cookies and local storage",
+      cookiesBody:
+        "The generator itself does not set tracking cookies. Your browser may keep small technical entries needed to render the page, but none of them contain your uploaded images or identify you personally.",
+      hostingTitle: "Hosting",
+      hostingBody:
+        "The site is served as static files. Standard server access logs (such as IP address and request time) may be recorded by the hosting provider for reliability and abuse prevention. These logs do not include the contents of any image you process.",
+      changesTitle: "Changes to this policy",
+      changesBody:
+        "If this policy ever changes, the \"Last updated\" date above will change too. The core promise — no signup, no uploads, no tracking — won't.",
+    },
+    backShort: "← Back to the generator",
+  },
+};
+
+const ja = {
+  nav: { generator: "ジェネレーター", platforms: "プラットフォーム", privacy: "プライバシー", github: "GitHubで見る" },
+  hero: {
+    kicker: "無料の公開ツール",
+    titleLine1: "ひとつのアイコンを、",
+    titleLine2: "すべてのプラットフォームへ。",
+    subtitle:
+      "1024×1024 の画像をドロップするだけで、iPhone・iPad・Apple Watch・macOS・Android に必要なすべてのサイズ（{{count}} 個）を数秒でダウンロードできます。",
+    ctaUpload: "アップロードして生成",
+    ctaGenerate: "{{count}} 個のアイコンを生成",
+    ctaGenerating: "生成中 {{current}}/{{total}}…",
+    finePrint: "登録不要・広告なし・ブラウザ内で完結",
+  },
+  dropzone: {
+    title: "ここにアイコンをドロップ",
+    sub: "PNG・1024×1024 推奨",
+    browse: "またはクリックして選択",
+    replace: "差し替え",
+    warning: "画像サイズは {{w}}×{{h}} です。最良の結果を得るには 1024×1024 の正方形画像を使用してください。生成は可能ですが、品質が低下する場合があります。",
+  },
+  name: { label: "ファイル名", hint: "ZIP 名とルートフォルダー名に使用されます。", placeholder: "AppIcon" },
+  platforms: { title: "プラットフォーム", total: "アイコン合計" },
+  footer: {
+    heading: "ずっと無料。",
+    body: "デザイナーと開発者のための公開ツールです。広告・登録・支払いは一切なし — すべてブラウザ内で処理されます。",
+    privacy: "プライバシーポリシー",
+    github: "GitHub でオープンソース公開中",
+  },
+  lang: { label: "言語" },
+  toast: {
+    chooseImage: "画像ファイル(PNG 推奨)を選択してください。",
+    loadFail: "画像を読み込めませんでした。",
+    selectPlatform: "少なくとも 1 つのプラットフォームを選択してください。",
+    generated: "{{count}} 個のアイコンを生成しました！",
+    genFail: "生成中にエラーが発生しました。",
+  },
+  privacy: {
+    back: "ジェネレーターに戻る",
+    kicker: "プライバシーポリシー",
+    title: "あなたのアイコンは<1>端末内に</1>留まります。",
+    updated: "最終更新日: 2026年5月2日",
+    chips: {
+      noSignup: "登録不要", noSignupSub: "アカウントは一切不要です。",
+      onDevice: "100% 端末内処理", onDeviceSub: "画像はブラウザの外に出ません。",
+      noTracking: "追跡なし", noTrackingSub: "広告・解析は一切ありません。",
+    },
+    sections: {
+      noSignupTitle: "登録は不要です",
+      noSignupBody: "App Icon Generator は無料の公開ツールです。アカウント作成やメールアドレスの登録、個人情報の提供は一切必要ありません。ログインもプロフィールも有料機能もなく、ページを開くだけで使い始められます。",
+      handlingTitle: "アップロードされた画像の扱いについて",
+      handlingBody: "ドロップまたは選択した画像はすべて、HTML Canvas API を使ってブラウザ内で完結して処理されます。ファイルがサーバーに送信されたり、第三者に共有されたり、現在のブラウザタブの外に保存されることは一切ありません。",
+      bullets: [
+        "リサイズは端末の CPU/GPU 上でローカルに実行されます。",
+        "生成された ZIP はメモリ上で組み立てられ、直接ダウンロードされます。",
+        "タブを閉じたり再読み込みすると、メモリ上のデータは消去されます。",
+        "アイコンのコピー・サムネイル・ログを保持しません。",
+      ],
+      dontCollectTitle: "収集しない情報",
+      dontCollectBody: "広告トラッカー、アップロードに対する行動分析、フィンガープリンティングは一切使用していません。データを売ることもありません — そもそも収集していないからです。",
+      cookiesTitle: "Cookie とローカルストレージ",
+      cookiesBody: "本ツール自体は追跡用 Cookie を設定しません。ブラウザがページ表示に必要な技術的データを保持する場合がありますが、その中にアップロードした画像や個人を特定する情報は含まれません。",
+      hostingTitle: "ホスティングについて",
+      hostingBody: "このサイトは静的ファイルとして配信されます。信頼性向上や不正利用防止のため、ホスティング提供元が標準的なアクセスログ(IP アドレス・リクエスト時刻など)を記録する場合があります。これらのログにあなたが処理した画像の内容は含まれません。",
+      changesTitle: "本ポリシーの変更",
+      changesBody: "本ポリシーが変更された場合は、上部の「最終更新日」も更新されます。ただし「登録不要・アップロードなし・追跡なし」という核心の約束は変わりません。",
+    },
+    backShort: "← ジェネレーターに戻る",
+  },
+};
+
+const zh = {
+  nav: { generator: "生成器", platforms: "平台", privacy: "隐私", github: "在 GitHub 查看" },
+  hero: {
+    kicker: "免费公共工具",
+    titleLine1: "一个图标，",
+    titleLine2: "适配每个平台。",
+    subtitle: "拖入一张 1024×1024 的图片，几秒内即可下载 iPhone、iPad、Apple Watch、macOS 和 Android 所需的全部尺寸 — 共 {{count}} 个图标。",
+    ctaUpload: "上传并生成",
+    ctaGenerate: "生成 {{count}} 个图标",
+    ctaGenerating: "正在生成 {{current}}/{{total}}…",
+    finePrint: "无需注册 · 无广告 · 浏览器内运行",
+  },
+  dropzone: {
+    title: "将图标拖到此处",
+    sub: "推荐 PNG · 1024×1024",
+    browse: "或点击浏览",
+    replace: "替换",
+    warning: "您的图片为 {{w}}×{{h}}。为获得最佳效果,请上传 1024×1024 的方形图片。仍可生成,但质量可能下降。",
+  },
+  name: { label: "文件名", hint: "用作 ZIP 名称和根文件夹。", placeholder: "AppIcon" },
+  platforms: { title: "平台", total: "图标总数" },
+  footer: {
+    heading: "永久免费。",
+    body: "面向设计师和开发者的公共工具。无广告、无注册、无付费 — 所有像素均在您的浏览器中处理。",
+    privacy: "隐私政策",
+    github: "在 GitHub 上免费开源",
+  },
+  lang: { label: "语言" },
+  toast: {
+    chooseImage: "请选择一个图片文件(推荐 PNG)。",
+    loadFail: "无法加载该图片。",
+    selectPlatform: "请至少选择一个平台。",
+    generated: "已生成 {{count}} 个图标!",
+    genFail: "生成时出错。",
+  },
+  privacy: {
+    back: "返回生成器",
+    kicker: "隐私政策",
+    title: "您的图标始终<1>留在您的设备上</1>。",
+    updated: "最后更新: 2026 年 5 月 2 日",
+    chips: {
+      noSignup: "无需注册", noSignupSub: "永远不需要账户。",
+      onDevice: "100% 本地处理", onDeviceSub: "图片永不离开您的浏览器。",
+      noTracking: "无追踪", noTrackingSub: "无广告、无文件分析。",
+    },
+    sections: {
+      noSignupTitle: "无需注册",
+      noSignupBody: "App Icon Generator 是一款免费的公共工具。您无需创建账户、提供邮箱或分享任何个人信息即可使用。没有登录、没有资料、没有付费墙 — 打开页面即可开始生成。",
+      handlingTitle: "上传图片的处理方式",
+      handlingBody: "您拖入或选择的每张图片都完全在浏览器内通过 HTML Canvas API 处理。文件绝不会上传到服务器、发送给第三方,或存储在当前浏览器标签页之外的任何位置。",
+      bullets: [
+        "调整大小在您设备的 CPU/GPU 上本地完成。",
+        "生成的 ZIP 在内存中构建并直接下载给您。",
+        "关闭或刷新标签页将清除内存中的所有内容。",
+        "我们不保留您图标的副本、缩略图或日志。",
+      ],
+      dontCollectTitle: "我们不收集的内容",
+      dontCollectBody: "我们不运行广告追踪器、对上传内容的行为分析或指纹识别脚本。我们不出售数据,因为我们根本不收集。",
+      cookiesTitle: "Cookie 与本地存储",
+      cookiesBody: "生成器本身不设置追踪 Cookie。您的浏览器可能保留渲染页面所需的少量技术条目,但其中均不包含您上传的图片或可识别您个人身份的信息。",
+      hostingTitle: "托管",
+      hostingBody: "本站点以静态文件方式提供。出于可靠性和防滥用目的,托管服务商可能记录标准服务器访问日志(如 IP 地址和请求时间)。这些日志不包含您处理的任何图片内容。",
+      changesTitle: "本政策的变更",
+      changesBody: "如果本政策发生变更,顶部的\"最后更新\"日期也会随之更新。核心承诺 — 无需注册、无上传、无追踪 — 不会改变。",
+    },
+    backShort: "← 返回生成器",
+  },
+};
+
+const es = {
+  nav: { generator: "Generador", platforms: "Plataformas", privacy: "Privacidad", github: "Ver en GitHub" },
+  hero: {
+    kicker: "Herramienta pública gratuita",
+    titleLine1: "Un icono.",
+    titleLine2: "Cada plataforma.",
+    subtitle: "Arrastra una imagen de 1024×1024 y descarga todos los tamaños que necesitas para iPhone, iPad, Apple Watch, macOS y Android — {{count}} iconos en segundos.",
+    ctaUpload: "Subir y generar",
+    ctaGenerate: "Generar {{count}} iconos",
+    ctaGenerating: "Generando {{current}}/{{total}}…",
+    finePrint: "Sin registro · Sin anuncios · Funciona en tu navegador",
+  },
+  dropzone: {
+    title: "Suelta tu icono aquí",
+    sub: "PNG · 1024×1024 recomendado",
+    browse: "o haz clic para explorar",
+    replace: "Reemplazar",
+    warning: "Tu imagen es {{w}}×{{h}}. Para mejores resultados, sube una imagen cuadrada de 1024×1024. Aún se generará, pero la calidad puede verse afectada.",
+  },
+  name: { label: "Nombre del archivo", hint: "Se usa como nombre del ZIP y carpeta raíz.", placeholder: "AppIcon" },
+  platforms: { title: "Plataformas", total: "Iconos totales" },
+  footer: {
+    heading: "Gratis, para siempre.",
+    body: "Una herramienta pública para diseñadores y desarrolladores. Sin anuncios, sin registro, sin pagos — cada píxel se procesa en tu navegador.",
+    privacy: "Política de privacidad",
+    github: "Gratis y de código abierto en GitHub",
+  },
+  lang: { label: "Idioma" },
+  toast: {
+    chooseImage: "Por favor elige un archivo de imagen (PNG recomendado).",
+    loadFail: "No se pudo cargar la imagen.",
+    selectPlatform: "Selecciona al menos una plataforma.",
+    generated: "¡{{count}} iconos generados!",
+    genFail: "Algo salió mal al generar.",
+  },
+  privacy: {
+    back: "Volver al generador",
+    kicker: "Política de privacidad",
+    title: "Tus iconos permanecen <1>en tu dispositivo</1>.",
+    updated: "Última actualización: 2 de mayo de 2026",
+    chips: {
+      noSignup: "Sin registro", noSignupSub: "Nunca hay cuentas.",
+      onDevice: "100% en el dispositivo", onDeviceSub: "Las imágenes nunca salen de tu navegador.",
+      noTracking: "Sin rastreo", noTrackingSub: "Sin anuncios ni análisis de tus archivos.",
+    },
+    sections: {
+      noSignupTitle: "No se requiere registro",
+      noSignupBody: "App Icon Generator es una herramienta pública y gratuita. No necesitas crear una cuenta, proporcionar un correo ni compartir información personal. No hay inicios de sesión, perfiles ni muros de pago — solo abre la página y comienza a generar.",
+      handlingTitle: "Cómo se manejan tus imágenes",
+      handlingBody: "Cada imagen que sueltas o seleccionas se procesa íntegramente dentro de tu navegador usando la API HTML Canvas. Tu archivo nunca se sube a un servidor, ni se envía a terceros, ni se almacena fuera de la pestaña actual.",
+      bullets: [
+        "El redimensionado ocurre localmente en la CPU/GPU de tu dispositivo.",
+        "El ZIP generado se construye en memoria y se descarga directamente a ti.",
+        "Cerrar o recargar la pestaña borra todo de la memoria.",
+        "No guardamos copias, miniaturas ni registros de tus iconos.",
+      ],
+      dontCollectTitle: "Lo que no recopilamos",
+      dontCollectBody: "No usamos rastreadores publicitarios, analíticas de comportamiento sobre tus subidas ni scripts de fingerprinting. No vendemos datos porque ni siquiera los recopilamos.",
+      cookiesTitle: "Cookies y almacenamiento local",
+      cookiesBody: "El generador no establece cookies de rastreo. Tu navegador puede mantener pequeñas entradas técnicas para renderizar la página, pero ninguna contiene tus imágenes ni te identifica.",
+      hostingTitle: "Hospedaje",
+      hostingBody: "El sitio se sirve como archivos estáticos. El proveedor puede registrar logs estándar (IP y hora de petición) por fiabilidad y prevención de abuso. Estos logs no incluyen el contenido de las imágenes que procesas.",
+      changesTitle: "Cambios en esta política",
+      changesBody: "Si esta política cambia, la fecha de \"Última actualización\" también cambiará. La promesa central — sin registro, sin subidas, sin rastreo — no cambiará.",
+    },
+    backShort: "← Volver al generador",
+  },
+};
+
+const ar = {
+  nav: { generator: "المولد", platforms: "المنصات", privacy: "الخصوصية", github: "عرض على GitHub" },
+  hero: {
+    kicker: "أداة عامة مجانية",
+    titleLine1: "أيقونة واحدة.",
+    titleLine2: "لكل منصة.",
+    subtitle: "أسقط صورة 1024×1024 وقم بتنزيل جميع الأحجام التي تحتاجها لـ iPhone و iPad و Apple Watch و macOS و Android — {{count}} أيقونة في ثوانٍ.",
+    ctaUpload: "ارفع وأنشئ",
+    ctaGenerate: "إنشاء {{count}} أيقونة",
+    ctaGenerating: "جارٍ الإنشاء {{current}}/{{total}}…",
+    finePrint: "بدون تسجيل · بدون إعلانات · يعمل في متصفحك",
+  },
+  dropzone: {
+    title: "أسقط أيقونتك هنا",
+    sub: "PNG · يُفضل 1024×1024",
+    browse: "أو انقر للتصفح",
+    replace: "استبدال",
+    warning: "صورتك بحجم {{w}}×{{h}}. للحصول على أفضل النتائج، ارفع صورة مربعة 1024×1024. سنقوم بالإنشاء، لكن الجودة قد تتأثر.",
+  },
+  name: { label: "اسم الملف", hint: "يستخدم كاسم ZIP والمجلد الجذري.", placeholder: "AppIcon" },
+  platforms: { title: "المنصات", total: "إجمالي الأيقونات" },
+  footer: {
+    heading: "مجاني، إلى الأبد.",
+    body: "أداة عامة للمصممين والمطورين. بدون إعلانات أو تسجيل أو مدفوعات — تتم معالجة كل بكسل في متصفحك.",
+    privacy: "سياسة الخصوصية",
+    github: "مجاني ومفتوح المصدر على GitHub",
+  },
+  lang: { label: "اللغة" },
+  toast: {
+    chooseImage: "يرجى اختيار ملف صورة (يُفضل PNG).",
+    loadFail: "تعذّر تحميل الصورة.",
+    selectPlatform: "اختر منصة واحدة على الأقل.",
+    generated: "تم إنشاء {{count}} أيقونة!",
+    genFail: "حدث خطأ أثناء الإنشاء.",
+  },
+  privacy: {
+    back: "العودة إلى المولد",
+    kicker: "سياسة الخصوصية",
+    title: "تبقى أيقوناتك <1>على جهازك</1>.",
+    updated: "آخر تحديث: 2 مايو 2026",
+    chips: {
+      noSignup: "بدون تسجيل", noSignupSub: "لا حسابات أبدًا.",
+      onDevice: "100٪ على الجهاز", onDeviceSub: "الصور لا تغادر متصفحك.",
+      noTracking: "بدون تتبع", noTrackingSub: "لا إعلانات ولا تحليلات لملفاتك.",
+    },
+    sections: {
+      noSignupTitle: "لا حاجة للتسجيل",
+      noSignupBody: "App Icon Generator أداة عامة مجانية. لست بحاجة إلى إنشاء حساب أو تقديم بريد إلكتروني أو مشاركة أي معلومات شخصية. لا توجد عمليات تسجيل دخول أو ملفات شخصية أو جدران دفع — افتح الصفحة وابدأ.",
+      handlingTitle: "كيف يتم التعامل مع صورك المرفوعة",
+      handlingBody: "كل صورة تسقطها أو تختارها تتم معالجتها بالكامل داخل متصفحك باستخدام HTML Canvas API. لا يتم رفع ملفك إلى خادم أو إرساله إلى طرف ثالث أو تخزينه خارج علامة التبويب الحالية.",
+      bullets: [
+        "تتم إعادة التحجيم محليًا على وحدة المعالجة في جهازك.",
+        "يتم بناء ملف ZIP في الذاكرة وتنزيله إليك مباشرة.",
+        "إغلاق أو تحديث علامة التبويب يمحو كل شيء من الذاكرة.",
+        "نحن لا نحتفظ بنسخ أو صور مصغرة أو سجلات لأيقوناتك.",
+      ],
+      dontCollectTitle: "ما لا نجمعه",
+      dontCollectBody: "نحن لا نستخدم متتبعات إعلانية أو تحليلات سلوكية أو نصوص بصمات. لا نبيع البيانات لأننا لا نجمعها أصلًا.",
+      cookiesTitle: "ملفات تعريف الارتباط والتخزين المحلي",
+      cookiesBody: "المولد نفسه لا يضع ملفات تعريف ارتباط للتتبع. قد يحتفظ متصفحك بإدخالات تقنية صغيرة لعرض الصفحة، لكنها لا تحتوي على صورك أو تحدد هويتك.",
+      hostingTitle: "الاستضافة",
+      hostingBody: "يُقدَّم الموقع كملفات ثابتة. قد يسجّل المزود سجلات وصول قياسية (مثل عنوان IP ووقت الطلب) لأغراض الموثوقية ومنع إساءة الاستخدام. لا تشمل هذه السجلات محتوى أي صورة تعالجها.",
+      changesTitle: "تغييرات هذه السياسة",
+      changesBody: "إذا تغيّرت هذه السياسة، فسيتغير تاريخ \"آخر تحديث\" أعلاه. الوعد الأساسي — بدون تسجيل، بدون رفع، بدون تتبع — لن يتغير.",
+    },
+    backShort: "← العودة إلى المولد",
+  },
+};
+
+const de = {
+  nav: { generator: "Generator", platforms: "Plattformen", privacy: "Datenschutz", github: "Auf GitHub ansehen" },
+  hero: {
+    kicker: "Kostenloses öffentliches Tool",
+    titleLine1: "Ein Icon.",
+    titleLine2: "Jede Plattform.",
+    subtitle: "Lade ein 1024×1024-Bild hoch und erhalte alle Größen für iPhone, iPad, Apple Watch, macOS und Android — {{count}} Icons in Sekunden.",
+    ctaUpload: "Hochladen & Generieren",
+    ctaGenerate: "{{count}} Icons generieren",
+    ctaGenerating: "Generiere {{current}}/{{total}}…",
+    finePrint: "Keine Anmeldung · Keine Werbung · Läuft im Browser",
+  },
+  dropzone: {
+    title: "Icon hier ablegen",
+    sub: "PNG · 1024×1024 empfohlen",
+    browse: "oder klicken zum Auswählen",
+    replace: "Ersetzen",
+    warning: "Dein Bild ist {{w}}×{{h}}. Für beste Ergebnisse lade ein quadratisches 1024×1024-Bild hoch. Wir generieren trotzdem, aber die Qualität kann leiden.",
+  },
+  name: { label: "Dateiname", hint: "Wird als ZIP-Name und Hauptordner verwendet.", placeholder: "AppIcon" },
+  platforms: { title: "Plattformen", total: "Icons gesamt" },
+  footer: {
+    heading: "Für immer kostenlos.",
+    body: "Ein öffentliches Tool für Designer und Entwickler. Keine Werbung, keine Anmeldung, keine Zahlungen — jeder Pixel wird in deinem Browser verarbeitet.",
+    privacy: "Datenschutzerklärung",
+    github: "Kostenlos und Open Source auf GitHub",
+  },
+  lang: { label: "Sprache" },
+  toast: {
+    chooseImage: "Bitte wähle eine Bilddatei (PNG empfohlen).",
+    loadFail: "Bild konnte nicht geladen werden.",
+    selectPlatform: "Wähle mindestens eine Plattform aus.",
+    generated: "{{count}} Icons generiert!",
+    genFail: "Beim Generieren ist ein Fehler aufgetreten.",
+  },
+  privacy: {
+    back: "Zurück zum Generator",
+    kicker: "Datenschutzerklärung",
+    title: "Deine Icons bleiben <1>auf deinem Gerät</1>.",
+    updated: "Zuletzt aktualisiert: 2. Mai 2026",
+    chips: {
+      noSignup: "Keine Anmeldung", noSignupSub: "Niemals Konten.",
+      onDevice: "100 % auf dem Gerät", onDeviceSub: "Bilder verlassen den Browser nie.",
+      noTracking: "Kein Tracking", noTrackingSub: "Keine Werbung, keine Datei-Analyse.",
+    },
+    sections: {
+      noSignupTitle: "Keine Anmeldung erforderlich",
+      noSignupBody: "Der App Icon Generator ist ein kostenloses öffentliches Tool. Du brauchst kein Konto, keine E-Mail und teilst keine persönlichen Daten. Keine Logins, keine Profile, keine Bezahlschranken — Seite öffnen und loslegen.",
+      handlingTitle: "Wie wir deine hochgeladenen Bilder behandeln",
+      handlingBody: "Jedes Bild wird vollständig im Browser über die HTML Canvas API verarbeitet. Deine Datei wird nie an einen Server hochgeladen, an Dritte weitergegeben oder außerhalb des aktuellen Tabs gespeichert.",
+      bullets: [
+        "Die Größenänderung erfolgt lokal auf der CPU/GPU deines Geräts.",
+        "Das ZIP wird im Speicher gebaut und direkt an dich ausgeliefert.",
+        "Schließen oder Aktualisieren des Tabs löscht alles aus dem Speicher.",
+        "Wir behalten keine Kopien, Thumbnails oder Logs deiner Icons.",
+      ],
+      dontCollectTitle: "Was wir nicht erfassen",
+      dontCollectBody: "Wir verwenden keine Werbe-Tracker, keine Verhaltensanalyse deiner Uploads und keine Fingerprinting-Skripte. Wir verkaufen keine Daten, weil wir keine sammeln.",
+      cookiesTitle: "Cookies und lokaler Speicher",
+      cookiesBody: "Der Generator setzt keine Tracking-Cookies. Dein Browser kann technische Einträge zur Darstellung speichern, diese enthalten weder deine Bilder noch identifizieren sie dich.",
+      hostingTitle: "Hosting",
+      hostingBody: "Die Seite wird als statische Dateien ausgeliefert. Der Anbieter kann Standard-Zugriffslogs (IP, Zeitpunkt) für Zuverlässigkeit und Missbrauchsschutz aufzeichnen. Diese enthalten keine Bildinhalte.",
+      changesTitle: "Änderungen dieser Richtlinie",
+      changesBody: "Falls sich diese Richtlinie ändert, wird das Datum oben aktualisiert. Das Kernversprechen — keine Anmeldung, keine Uploads, kein Tracking — bleibt.",
+    },
+    backShort: "← Zurück zum Generator",
+  },
+};
+
+const pt = {
+  nav: { generator: "Gerador", platforms: "Plataformas", privacy: "Privacidade", github: "Ver no GitHub" },
+  hero: {
+    kicker: "Ferramenta pública gratuita",
+    titleLine1: "Um ícone.",
+    titleLine2: "Todas as plataformas.",
+    subtitle: "Arraste uma imagem 1024×1024 e baixe todos os tamanhos para iPhone, iPad, Apple Watch, macOS e Android — {{count}} ícones em segundos.",
+    ctaUpload: "Enviar e gerar",
+    ctaGenerate: "Gerar {{count}} ícones",
+    ctaGenerating: "Gerando {{current}}/{{total}}…",
+    finePrint: "Sem cadastro · Sem anúncios · Roda no seu navegador",
+  },
+  dropzone: {
+    title: "Solte seu ícone aqui",
+    sub: "PNG · 1024×1024 recomendado",
+    browse: "ou clique para procurar",
+    replace: "Substituir",
+    warning: "Sua imagem é {{w}}×{{h}}. Para melhores resultados, envie uma imagem quadrada 1024×1024. Ainda geramos, mas a qualidade pode cair.",
+  },
+  name: { label: "Nome do arquivo", hint: "Usado como nome do ZIP e pasta raiz.", placeholder: "AppIcon" },
+  platforms: { title: "Plataformas", total: "Total de ícones" },
+  footer: {
+    heading: "Grátis, para sempre.",
+    body: "Uma ferramenta pública para designers e desenvolvedores. Sem anúncios, sem cadastro, sem pagamentos — cada pixel é processado no seu navegador.",
+    privacy: "Política de Privacidade",
+    github: "Grátis e open source no GitHub",
+  },
+  lang: { label: "Idioma" },
+  toast: {
+    chooseImage: "Escolha um arquivo de imagem (PNG recomendado).",
+    loadFail: "Não foi possível carregar a imagem.",
+    selectPlatform: "Selecione pelo menos uma plataforma.",
+    generated: "{{count}} ícones gerados!",
+    genFail: "Algo deu errado ao gerar.",
+  },
+  privacy: {
+    back: "Voltar ao gerador",
+    kicker: "Política de Privacidade",
+    title: "Seus ícones ficam <1>no seu dispositivo</1>.",
+    updated: "Última atualização: 2 de maio de 2026",
+    chips: {
+      noSignup: "Sem cadastro", noSignupSub: "Nunca há contas.",
+      onDevice: "100% no dispositivo", onDeviceSub: "Imagens nunca saem do navegador.",
+      noTracking: "Sem rastreio", noTrackingSub: "Sem anúncios ou análise dos arquivos.",
+    },
+    sections: {
+      noSignupTitle: "Sem cadastro",
+      noSignupBody: "O App Icon Generator é uma ferramenta pública e gratuita. Você não precisa criar conta, fornecer e-mail nem compartilhar informações pessoais. Sem logins, perfis ou paywalls — abra a página e comece.",
+      handlingTitle: "Como suas imagens são tratadas",
+      handlingBody: "Cada imagem é processada inteiramente no seu navegador via HTML Canvas API. Seu arquivo nunca é enviado a um servidor, a terceiros, nem armazenado fora da aba atual.",
+      bullets: [
+        "O redimensionamento acontece localmente na CPU/GPU do seu dispositivo.",
+        "O ZIP é montado em memória e baixado diretamente para você.",
+        "Fechar ou atualizar a aba apaga tudo da memória.",
+        "Não mantemos cópias, miniaturas ou logs dos seus ícones.",
+      ],
+      dontCollectTitle: "O que não coletamos",
+      dontCollectBody: "Não usamos rastreadores de anúncios, analytics comportamental sobre seus envios ou scripts de fingerprinting. Não vendemos dados porque não coletamos.",
+      cookiesTitle: "Cookies e armazenamento local",
+      cookiesBody: "O gerador não define cookies de rastreio. Seu navegador pode manter entradas técnicas para renderizar a página, mas nenhuma contém suas imagens nem identifica você.",
+      hostingTitle: "Hospedagem",
+      hostingBody: "O site é servido como arquivos estáticos. O provedor pode registrar logs padrão (IP, horário) por confiabilidade e prevenção de abuso. Esses logs não incluem o conteúdo das imagens.",
+      changesTitle: "Alterações nesta política",
+      changesBody: "Se esta política mudar, a data de \"Última atualização\" também mudará. A promessa central — sem cadastro, sem uploads, sem rastreio — permanece.",
+    },
+    backShort: "← Voltar ao gerador",
+  },
+};
+
+const fr = {
+  nav: { generator: "Générateur", platforms: "Plateformes", privacy: "Confidentialité", github: "Voir sur GitHub" },
+  hero: {
+    kicker: "Outil public gratuit",
+    titleLine1: "Une icône.",
+    titleLine2: "Toutes les plateformes.",
+    subtitle: "Déposez une image 1024×1024 et téléchargez toutes les tailles nécessaires pour iPhone, iPad, Apple Watch, macOS et Android — {{count}} icônes en quelques secondes.",
+    ctaUpload: "Importer et générer",
+    ctaGenerate: "Générer {{count}} icônes",
+    ctaGenerating: "Génération {{current}}/{{total}}…",
+    finePrint: "Sans inscription · Sans pub · Tout dans votre navigateur",
+  },
+  dropzone: {
+    title: "Déposez votre icône ici",
+    sub: "PNG · 1024×1024 recommandé",
+    browse: "ou cliquez pour parcourir",
+    replace: "Remplacer",
+    warning: "Votre image fait {{w}}×{{h}}. Pour de meilleurs résultats, importez une image carrée 1024×1024. La génération aura lieu, mais la qualité peut souffrir.",
+  },
+  name: { label: "Nom du fichier", hint: "Utilisé comme nom du ZIP et dossier racine.", placeholder: "AppIcon" },
+  platforms: { title: "Plateformes", total: "Total d'icônes" },
+  footer: {
+    heading: "Gratuit, pour toujours.",
+    body: "Un outil public pour designers et développeurs. Sans pub, sans inscription, sans paiement — chaque pixel est traité dans votre navigateur.",
+    privacy: "Politique de confidentialité",
+    github: "Gratuit et open source sur GitHub",
+  },
+  lang: { label: "Langue" },
+  toast: {
+    chooseImage: "Veuillez choisir un fichier image (PNG recommandé).",
+    loadFail: "Impossible de charger cette image.",
+    selectPlatform: "Sélectionnez au moins une plateforme.",
+    generated: "{{count}} icônes générées !",
+    genFail: "Une erreur est survenue pendant la génération.",
+  },
+  privacy: {
+    back: "Retour au générateur",
+    kicker: "Politique de confidentialité",
+    title: "Vos icônes restent <1>sur votre appareil</1>.",
+    updated: "Dernière mise à jour : 2 mai 2026",
+    chips: {
+      noSignup: "Sans inscription", noSignupSub: "Jamais de comptes.",
+      onDevice: "100 % sur l'appareil", onDeviceSub: "Les images ne quittent jamais votre navigateur.",
+      noTracking: "Sans suivi", noTrackingSub: "Pas de pub ni d'analyse de vos fichiers.",
+    },
+    sections: {
+      noSignupTitle: "Aucune inscription requise",
+      noSignupBody: "App Icon Generator est un outil public et gratuit. Pas besoin de créer un compte, fournir un e-mail ou partager d'informations personnelles. Aucun login, aucun profil, aucun paywall — ouvrez la page et commencez.",
+      handlingTitle: "Comment vos images sont traitées",
+      handlingBody: "Chaque image est traitée entièrement dans votre navigateur via l'API HTML Canvas. Votre fichier n'est jamais envoyé à un serveur, à un tiers, ni stocké hors de l'onglet actuel.",
+      bullets: [
+        "Le redimensionnement se fait localement sur le CPU/GPU de votre appareil.",
+        "Le ZIP est construit en mémoire et téléchargé directement.",
+        "Fermer ou rafraîchir l'onglet efface tout de la mémoire.",
+        "Nous ne gardons ni copies, ni miniatures, ni logs de vos icônes.",
+      ],
+      dontCollectTitle: "Ce que nous ne collectons pas",
+      dontCollectBody: "Nous n'utilisons pas de traqueurs publicitaires, d'analytique comportementale sur vos imports, ni de scripts de fingerprinting. Nous ne vendons pas de données car nous n'en collectons pas.",
+      cookiesTitle: "Cookies et stockage local",
+      cookiesBody: "Le générateur ne pose pas de cookies de suivi. Votre navigateur peut garder de petites entrées techniques pour afficher la page, sans contenu d'image ni identification.",
+      hostingTitle: "Hébergement",
+      hostingBody: "Le site est servi sous forme de fichiers statiques. L'hébergeur peut enregistrer des logs standards (IP, horodatage) pour la fiabilité et la prévention d'abus. Ces logs ne contiennent pas le contenu de vos images.",
+      changesTitle: "Modifications de cette politique",
+      changesBody: "Si cette politique change, la date \"Dernière mise à jour\" sera modifiée. La promesse centrale — sans inscription, sans upload, sans suivi — restera.",
+    },
+    backShort: "← Retour au générateur",
+  },
+};
+
+const hi = {
+  nav: { generator: "जनरेटर", platforms: "प्लेटफ़ॉर्म", privacy: "गोपनीयता", github: "GitHub पर देखें" },
+  hero: {
+    kicker: "मुफ़्त सार्वजनिक टूल",
+    titleLine1: "एक आइकन।",
+    titleLine2: "हर प्लेटफ़ॉर्म।",
+    subtitle: "1024×1024 की इमेज ड्रॉप करें और iPhone, iPad, Apple Watch, macOS और Android के लिए सभी आकार सेकंडों में डाउनलोड करें — {{count}} आइकन।",
+    ctaUpload: "अपलोड और जनरेट करें",
+    ctaGenerate: "{{count}} आइकन जनरेट करें",
+    ctaGenerating: "जनरेट हो रहा है {{current}}/{{total}}…",
+    finePrint: "साइनअप नहीं · विज्ञापन नहीं · आपके ब्राउज़र में चलता है",
+  },
+  dropzone: {
+    title: "अपना आइकन यहाँ छोड़ें",
+    sub: "PNG · 1024×1024 अनुशंसित",
+    browse: "या ब्राउज़ करने के लिए क्लिक करें",
+    replace: "बदलें",
+    warning: "आपकी इमेज {{w}}×{{h}} है। बेहतर परिणाम के लिए 1024×1024 स्क्वायर इमेज अपलोड करें। जनरेट होगा पर गुणवत्ता प्रभावित हो सकती है।",
+  },
+  name: { label: "फ़ाइल का नाम", hint: "ZIP नाम और रूट फ़ोल्डर के रूप में उपयोग।", placeholder: "AppIcon" },
+  platforms: { title: "प्लेटफ़ॉर्म", total: "कुल आइकन" },
+  footer: {
+    heading: "हमेशा के लिए मुफ़्त।",
+    body: "डिज़ाइनरों और डेवलपर्स के लिए एक सार्वजनिक टूल। कोई विज्ञापन, साइनअप या भुगतान नहीं — हर पिक्सेल आपके ब्राउज़र में प्रोसेस होता है।",
+    privacy: "गोपनीयता नीति",
+    github: "GitHub पर मुफ़्त और ओपन सोर्स",
+  },
+  lang: { label: "भाषा" },
+  toast: {
+    chooseImage: "कृपया एक इमेज फ़ाइल चुनें (PNG अनुशंसित)।",
+    loadFail: "वह इमेज लोड नहीं हो सकी।",
+    selectPlatform: "कम से कम एक प्लेटफ़ॉर्म चुनें।",
+    generated: "{{count}} आइकन जनरेट किए गए!",
+    genFail: "जनरेट करते समय कुछ गलत हुआ।",
+  },
+  privacy: {
+    back: "जनरेटर पर वापस जाएँ",
+    kicker: "गोपनीयता नीति",
+    title: "आपके आइकन <1>आपके डिवाइस पर</1> रहते हैं।",
+    updated: "अंतिम अद्यतन: 2 मई 2026",
+    chips: {
+      noSignup: "साइनअप नहीं", noSignupSub: "कभी कोई खाता नहीं।",
+      onDevice: "100% डिवाइस पर", onDeviceSub: "इमेज ब्राउज़र से बाहर नहीं जाती।",
+      noTracking: "कोई ट्रैकिंग नहीं", noTrackingSub: "कोई विज्ञापन या फ़ाइल विश्लेषण नहीं।",
+    },
+    sections: {
+      noSignupTitle: "साइनअप आवश्यक नहीं",
+      noSignupBody: "App Icon Generator एक मुफ़्त सार्वजनिक टूल है। खाता, ईमेल या व्यक्तिगत जानकारी की ज़रूरत नहीं। कोई लॉगिन, प्रोफ़ाइल या पेवॉल नहीं — पेज खोलें और शुरू करें।",
+      handlingTitle: "आपकी अपलोड की गई इमेज को कैसे संभाला जाता है",
+      handlingBody: "हर इमेज पूरी तरह आपके ब्राउज़र में HTML Canvas API से प्रोसेस होती है। आपकी फ़ाइल कभी सर्वर पर अपलोड या तीसरे पक्ष को नहीं भेजी जाती।",
+      bullets: [
+        "रीसाइज़िंग आपके डिवाइस के CPU/GPU पर लोकली होती है।",
+        "ZIP मेमोरी में बनती है और सीधे आपको डाउनलोड होती है।",
+        "टैब बंद या रीफ़्रेश करने पर सब कुछ मेमोरी से मिट जाता है।",
+        "हम आपके आइकन की कॉपी, थंबनेल या लॉग नहीं रखते।",
+      ],
+      dontCollectTitle: "हम क्या नहीं इकट्ठा करते",
+      dontCollectBody: "हम विज्ञापन ट्रैकर, व्यवहार विश्लेषण या फ़िंगरप्रिंटिंग स्क्रिप्ट का उपयोग नहीं करते। हम डेटा नहीं बेचते क्योंकि हम इसे इकट्ठा ही नहीं करते।",
+      cookiesTitle: "कुकीज़ और लोकल स्टोरेज",
+      cookiesBody: "जनरेटर ट्रैकिंग कुकीज़ सेट नहीं करता। ब्राउज़र पेज रेंडर करने हेतु कुछ तकनीकी एंट्री रख सकता है, पर उनमें आपकी इमेज या पहचान नहीं होती।",
+      hostingTitle: "होस्टिंग",
+      hostingBody: "साइट स्टैटिक फ़ाइलों के रूप में सर्व होती है। होस्टिंग प्रदाता मानक एक्सेस लॉग (IP, समय) रख सकता है। इनमें इमेज की सामग्री नहीं होती।",
+      changesTitle: "इस नीति में बदलाव",
+      changesBody: "यदि नीति बदले, तो ऊपर की \"अंतिम अद्यतन\" तिथि भी बदलेगी। मूल वादा — साइनअप नहीं, अपलोड नहीं, ट्रैकिंग नहीं — नहीं बदलेगा।",
+    },
+    backShort: "← जनरेटर पर वापस",
+  },
+};
+
+const ko = {
+  nav: { generator: "생성기", platforms: "플랫폼", privacy: "개인정보", github: "GitHub에서 보기" },
+  hero: {
+    kicker: "무료 공개 도구",
+    titleLine1: "하나의 아이콘,",
+    titleLine2: "모든 플랫폼.",
+    subtitle: "1024×1024 이미지를 드롭하면 iPhone, iPad, Apple Watch, macOS, Android에 필요한 모든 크기({{count}}개)를 몇 초 만에 다운로드할 수 있습니다.",
+    ctaUpload: "업로드 후 생성",
+    ctaGenerate: "{{count}}개 아이콘 생성",
+    ctaGenerating: "생성 중 {{current}}/{{total}}…",
+    finePrint: "가입 불필요 · 광고 없음 · 브라우저에서 실행",
+  },
+  dropzone: {
+    title: "여기에 아이콘을 드롭하세요",
+    sub: "PNG · 1024×1024 권장",
+    browse: "또는 클릭하여 찾아보기",
+    replace: "교체",
+    warning: "이미지 크기가 {{w}}×{{h}}입니다. 최상의 결과를 위해 1024×1024 정사각형 이미지를 업로드하세요. 생성은 가능하지만 품질이 떨어질 수 있습니다.",
+  },
+  name: { label: "파일 이름", hint: "ZIP 이름과 루트 폴더로 사용됩니다.", placeholder: "AppIcon" },
+  platforms: { title: "플랫폼", total: "총 아이콘" },
+  footer: {
+    heading: "영원히 무료.",
+    body: "디자이너와 개발자를 위한 공개 도구. 광고, 가입, 결제 없음 — 모든 픽셀이 브라우저에서 처리됩니다.",
+    privacy: "개인정보처리방침",
+    github: "GitHub에서 무료 오픈소스",
+  },
+  lang: { label: "언어" },
+  toast: {
+    chooseImage: "이미지 파일을 선택하세요 (PNG 권장).",
+    loadFail: "이미지를 불러올 수 없습니다.",
+    selectPlatform: "최소 하나의 플랫폼을 선택하세요.",
+    generated: "{{count}}개 아이콘이 생성되었습니다!",
+    genFail: "생성 중 오류가 발생했습니다.",
+  },
+  privacy: {
+    back: "생성기로 돌아가기",
+    kicker: "개인정보처리방침",
+    title: "당신의 아이콘은 <1>기기에 머무릅니다</1>.",
+    updated: "최종 업데이트: 2026년 5월 2일",
+    chips: {
+      noSignup: "가입 불필요", noSignupSub: "계정은 절대 없음.",
+      onDevice: "100% 기기 내 처리", onDeviceSub: "이미지는 브라우저를 떠나지 않음.",
+      noTracking: "추적 없음", noTrackingSub: "광고도 파일 분석도 없음.",
+    },
+    sections: {
+      noSignupTitle: "가입이 필요 없습니다",
+      noSignupBody: "App Icon Generator는 무료 공개 도구입니다. 계정 생성, 이메일 제공, 개인정보 공유가 필요 없습니다. 로그인, 프로필, 결제 장벽 없이 페이지를 열고 바로 시작하세요.",
+      handlingTitle: "업로드된 이미지 처리 방식",
+      handlingBody: "드롭하거나 선택한 모든 이미지는 HTML Canvas API를 통해 브라우저 내에서 완전히 처리됩니다. 파일은 서버에 업로드되거나 제3자에게 전송되거나 현재 탭 외부에 저장되지 않습니다.",
+      bullets: [
+        "리사이징은 기기의 CPU/GPU에서 로컬로 수행됩니다.",
+        "생성된 ZIP은 메모리에 만들어져 직접 다운로드됩니다.",
+        "탭을 닫거나 새로고침하면 메모리에서 모두 삭제됩니다.",
+        "아이콘의 사본, 썸네일, 로그를 보관하지 않습니다.",
+      ],
+      dontCollectTitle: "수집하지 않는 정보",
+      dontCollectBody: "광고 추적기, 업로드에 대한 행동 분석, 핑거프린팅 스크립트를 사용하지 않습니다. 데이터를 수집하지 않으므로 판매할 수도 없습니다.",
+      cookiesTitle: "쿠키와 로컬 스토리지",
+      cookiesBody: "생성기 자체는 추적 쿠키를 설정하지 않습니다. 브라우저가 페이지 렌더링에 필요한 작은 기술적 항목을 보관할 수 있지만, 이미지나 개인 식별 정보는 포함되지 않습니다.",
+      hostingTitle: "호스팅",
+      hostingBody: "사이트는 정적 파일로 제공됩니다. 호스팅 제공자는 안정성과 남용 방지를 위해 표준 액세스 로그(IP, 요청 시간)를 기록할 수 있습니다. 이러한 로그에는 이미지 내용이 포함되지 않습니다.",
+      changesTitle: "이 정책의 변경",
+      changesBody: "정책이 변경되면 위 \"최종 업데이트\" 날짜도 변경됩니다. 핵심 약속 — 가입 불필요, 업로드 없음, 추적 없음 — 은 바뀌지 않습니다.",
+    },
+    backShort: "← 생성기로 돌아가기",
+  },
+};
+
+const kk = {
+  nav: { generator: "Генератор", platforms: "Платформалар", privacy: "Құпиялылық", github: "GitHub-та қарау" },
+  hero: {
+    kicker: "Тегін ашық құрал",
+    titleLine1: "Бір таңбаша.",
+    titleLine2: "Әр платформа.",
+    subtitle: "1024×1024 суретті тастаңыз және iPhone, iPad, Apple Watch, macOS пен Android үшін барлық қажетті өлшемдерді секундтар ішінде жүктеп алыңыз — {{count}} таңбаша.",
+    ctaUpload: "Жүктеу және жасау",
+    ctaGenerate: "{{count}} таңбаша жасау",
+    ctaGenerating: "Жасалуда {{current}}/{{total}}…",
+    finePrint: "Тіркелусіз · Жарнамасыз · Браузеріңізде жұмыс істейді",
+  },
+  dropzone: {
+    title: "Таңбашаны осы жерге тастаңыз",
+    sub: "PNG · 1024×1024 ұсынылады",
+    browse: "немесе шолу үшін басыңыз",
+    replace: "Ауыстыру",
+    warning: "Сіздің суретіңіз {{w}}×{{h}}. Үздік нәтиже үшін 1024×1024 шаршы сурет жүктеңіз. Жасаймыз, бірақ сапа төмендеуі мүмкін.",
+  },
+  name: { label: "Файл атауы", hint: "ZIP атауы және түбірлік қалта ретінде пайдаланылады.", placeholder: "AppIcon" },
+  platforms: { title: "Платформалар", total: "Барлық таңбашалар" },
+  footer: {
+    heading: "Мәңгі тегін.",
+    body: "Дизайнерлер мен әзірлеушілерге арналған ашық құрал. Жарнама, тіркелу, төлем жоқ — әр пиксель браузеріңізде өңделеді.",
+    privacy: "Құпиялылық саясаты",
+    github: "GitHub-та тегін және ашық бастапқы код",
+  },
+  lang: { label: "Тіл" },
+  toast: {
+    chooseImage: "Сурет файлын таңдаңыз (PNG ұсынылады).",
+    loadFail: "Бұл суретті жүктеу мүмкін болмады.",
+    selectPlatform: "Кемінде бір платформаны таңдаңыз.",
+    generated: "{{count}} таңбаша жасалды!",
+    genFail: "Жасау кезінде қате орын алды.",
+  },
+  privacy: {
+    back: "Генераторға оралу",
+    kicker: "Құпиялылық саясаты",
+    title: "Сіздің таңбашаларыңыз <1>құрылғыңызда</1> қалады.",
+    updated: "Соңғы жаңарту: 2 мамыр 2026 ж.",
+    chips: {
+      noSignup: "Тіркелусіз", noSignupSub: "Ешқашан тіркелгі жоқ.",
+      onDevice: "100% құрылғыда", onDeviceSub: "Суреттер браузерден шықпайды.",
+      noTracking: "Бақылау жоқ", noTrackingSub: "Жарнама да, файл талдауы да жоқ.",
+    },
+    sections: {
+      noSignupTitle: "Тіркелу қажет емес",
+      noSignupBody: "App Icon Generator — тегін ашық құрал. Тіркелгі, e-mail немесе жеке деректер қажет емес. Кіру, профиль, ақылы қабырғалар жоқ — бетті ашып, бастаңыз.",
+      handlingTitle: "Жүктелген суреттер қалай өңделеді",
+      handlingBody: "Әр сурет толығымен HTML Canvas API арқылы браузеріңізде өңделеді. Файл серверге жүктелмейді, үшінші тарапқа жіберілмейді, ағымдағы қойындыдан тыс сақталмайды.",
+      bullets: [
+        "Өлшемді өзгерту құрылғы CPU/GPU-да жергілікті жүреді.",
+        "ZIP жадта жасалып, тікелей сізге жүктеледі.",
+        "Қойындыны жабу немесе жаңарту жадтан барлығын өшіреді.",
+        "Таңбашаларыңыздың көшірмесі, нобайы, журналы сақталмайды.",
+      ],
+      dontCollectTitle: "Біз жинамайтын нәрселер",
+      dontCollectBody: "Жарнамалық бақылаушылар, әрекет талдауы, fingerprinting сценарийлері қолданылмайды. Деректерді жинамаймыз, сондықтан сатпаймыз.",
+      cookiesTitle: "Cookie және жергілікті жад",
+      cookiesBody: "Генератор бақылау cookie орнатпайды. Браузер бетті көрсету үшін шағын техникалық жазбаларды сақтауы мүмкін, бірақ онда суретіңіз де, жеке деректер де жоқ.",
+      hostingTitle: "Хостинг",
+      hostingBody: "Сайт статикалық файлдар ретінде ұсынылады. Хостинг провайдері сенімділік пен теріс пайдалану алдын алу үшін стандартты журналдарды (IP, уақыт) жазуы мүмкін. Бұл журналдарда сурет мазмұны болмайды.",
+      changesTitle: "Саясаттағы өзгерістер",
+      changesBody: "Саясат өзгерсе, жоғарыдағы \"Соңғы жаңарту\" күні де өзгереді. Негізгі уәде — тіркелусіз, жүктеусіз, бақылаусыз — өзгеріссіз қалады.",
+    },
+    backShort: "← Генераторға оралу",
+  },
+};
+
 const resources = {
-  en: {
-    translation: {
-      nav: {
-        generator: "Generator",
-        platforms: "Platforms",
-        privacy: "Privacy",
-        github: "GitHub",
-      },
-      hero: {
-        kicker: "Free public tool",
-        titleLine1: "One icon.",
-        titleLine2: "Every platform.",
-        subtitle:
-          "Drop in a 1024×1024 image and download every size you need for iPhone, iPad, Apple Watch, macOS, and Android — {{count}} icons in seconds.",
-        ctaUpload: "Upload & Generate",
-        ctaGenerate: "Generate {{count}} icons",
-        ctaGenerating: "Generating {{current}}/{{total}}…",
-        finePrint: "No signup · No ads · Runs in your browser",
-      },
-      dropzone: {
-        title: "Drop your icon here",
-        sub: "PNG · 1024×1024 recommended",
-        browse: "or click to browse",
-        replace: "Replace",
-        warning:
-          "Your image is {{w}}×{{h}}. For best results, upload a square 1024×1024 image. We'll still generate, but quality may suffer.",
-      },
-      name: {
-        label: "File name",
-        hint: "Used as the zip name and root folder.",
-        placeholder: "AppIcon",
-      },
-      platforms: {
-        title: "Platforms",
-        total: "Total icons",
-      },
-      footer: {
-        heading: "Free, forever.",
-        body: "A public tool for designers and developers. No ads, no signup, no payments — every pixel processed in your browser.",
-        privacy: "Privacy Policy",
-        github: "Free and open source on GitHub",
-      },
-      lang: {
-        label: "Language",
-      },
-      toast: {
-        chooseImage: "Please choose an image file (PNG recommended).",
-        loadFail: "Could not load that image.",
-        selectPlatform: "Select at least one platform.",
-        generated: "Generated {{count}} icons!",
-        genFail: "Something went wrong while generating.",
-      },
-      privacy: {
-        back: "Back to generator",
-        kicker: "Privacy Policy",
-        title: "Your icons stay <1>on your device</1>.",
-        updated: "Last updated: May 2, 2026",
-        chips: {
-          noSignup: "No signup",
-          noSignupSub: "No accounts, ever.",
-          onDevice: "100% on-device",
-          onDeviceSub: "Images never leave your browser.",
-          noTracking: "No tracking",
-          noTrackingSub: "No ads, no analytics on your files.",
-        },
-        sections: {
-          noSignupTitle: "No signup required",
-          noSignupBody:
-            "The App Icon Generator is a free, public tool. You don't need to create an account, provide an email address, or share any personal information to use it. There are no logins, no profiles, and no paywalls — just open the page and start generating.",
-          handlingTitle: "How your uploaded images are handled",
-          handlingBody:
-            "Every image you drop or select is processed entirely inside your web browser using the HTML Canvas API. Your file is never uploaded to a server, never sent to a third party, and never stored anywhere outside the current browser tab.",
-          bullets: [
-            "Resizing happens locally on your device's CPU/GPU.",
-            "The generated ZIP is built in-memory and downloaded directly to you.",
-            "Closing or refreshing the tab erases everything from memory.",
-            "We don't keep copies, thumbnails, or logs of your icons.",
-          ],
-          dontCollectTitle: "What we don't collect",
-          dontCollectBody:
-            "We don't run advertising trackers, behavioral analytics on your uploads, or fingerprinting scripts. We don't sell data because we don't collect it in the first place.",
-          cookiesTitle: "Cookies and local storage",
-          cookiesBody:
-            "The generator itself does not set tracking cookies. Your browser may keep small technical entries needed to render the page, but none of them contain your uploaded images or identify you personally.",
-          hostingTitle: "Hosting",
-          hostingBody:
-            "The site is served as static files. Standard server access logs (such as IP address and request time) may be recorded by the hosting provider for reliability and abuse prevention. These logs do not include the contents of any image you process.",
-          changesTitle: "Changes to this policy",
-          changesBody:
-            "If this policy ever changes, the \"Last updated\" date above will change too. The core promise — no signup, no uploads, no tracking — won't.",
-        },
-        backShort: "← Back to the generator",
-      },
-    },
-  },
-  ja: {
-    translation: {
-      nav: {
-        generator: "ジェネレーター",
-        platforms: "プラットフォーム",
-        privacy: "プライバシー",
-        github: "GitHubで見る",
-      },
-      hero: {
-        kicker: "無料の公開ツール",
-        titleLine1: "ひとつのアイコンを、",
-        titleLine2: "すべてのプラットフォームへ。",
-        subtitle:
-          "1024×1024 の画像をドロップするだけで、iPhone・iPad・Apple Watch・macOS・Android に必要なすべてのサイズ（{{count}} 個）を数秒でダウンロードできます。",
-        ctaUpload: "アップロードして生成",
-        ctaGenerate: "{{count}} 個のアイコンを生成",
-        ctaGenerating: "生成中 {{current}}/{{total}}…",
-        finePrint: "登録不要・広告なし・ブラウザ内で完結",
-      },
-      dropzone: {
-        title: "ここにアイコンをドロップ",
-        sub: "PNG・1024×1024 推奨",
-        browse: "またはクリックして選択",
-        replace: "差し替え",
-        warning:
-          "画像サイズは {{w}}×{{h}} です。最良の結果を得るには 1024×1024 の正方形画像を使用してください。生成は可能ですが、品質が低下する場合があります。",
-      },
-      name: {
-        label: "ファイル名",
-        hint: "ZIP 名とルートフォルダー名に使用されます。",
-        placeholder: "AppIcon",
-      },
-      platforms: {
-        title: "プラットフォーム",
-        total: "アイコン合計",
-      },
-      footer: {
-        heading: "ずっと無料。",
-        body: "デザイナーと開発者のための公開ツールです。広告・登録・支払いは一切なし — すべてブラウザ内で処理されます。",
-        privacy: "プライバシーポリシー",
-        github: "GitHub でオープンソース公開中",
-      },
-      lang: {
-        label: "言語",
-      },
-      toast: {
-        chooseImage: "画像ファイル(PNG 推奨)を選択してください。",
-        loadFail: "画像を読み込めませんでした。",
-        selectPlatform: "少なくとも 1 つのプラットフォームを選択してください。",
-        generated: "{{count}} 個のアイコンを生成しました！",
-        genFail: "生成中にエラーが発生しました。",
-      },
-      privacy: {
-        back: "ジェネレーターに戻る",
-        kicker: "プライバシーポリシー",
-        title: "あなたのアイコンは<1>端末内に</1>留まります。",
-        updated: "最終更新日: 2026年5月2日",
-        chips: {
-          noSignup: "登録不要",
-          noSignupSub: "アカウントは一切不要です。",
-          onDevice: "100% 端末内処理",
-          onDeviceSub: "画像はブラウザの外に出ません。",
-          noTracking: "追跡なし",
-          noTrackingSub: "広告・解析は一切ありません。",
-        },
-        sections: {
-          noSignupTitle: "登録は不要です",
-          noSignupBody:
-            "App Icon Generator は無料の公開ツールです。アカウント作成やメールアドレスの登録、個人情報の提供は一切必要ありません。ログインもプロフィールも有料機能もなく、ページを開くだけで使い始められます。",
-          handlingTitle: "アップロードされた画像の扱いについて",
-          handlingBody:
-            "ドロップまたは選択した画像はすべて、HTML Canvas API を使ってブラウザ内で完結して処理されます。ファイルがサーバーに送信されたり、第三者に共有されたり、現在のブラウザタブの外に保存されることは一切ありません。",
-          bullets: [
-            "リサイズは端末の CPU/GPU 上でローカルに実行されます。",
-            "生成された ZIP はメモリ上で組み立てられ、直接ダウンロードされます。",
-            "タブを閉じたり再読み込みすると、メモリ上のデータは消去されます。",
-            "アイコンのコピー・サムネイル・ログを保持しません。",
-          ],
-          dontCollectTitle: "収集しない情報",
-          dontCollectBody:
-            "広告トラッカー、アップロードに対する行動分析、フィンガープリンティングは一切使用していません。データを売ることもありません — そもそも収集していないからです。",
-          cookiesTitle: "Cookie とローカルストレージ",
-          cookiesBody:
-            "本ツール自体は追跡用 Cookie を設定しません。ブラウザがページ表示に必要な技術的データを保持する場合がありますが、その中にアップロードした画像や個人を特定する情報は含まれません。",
-          hostingTitle: "ホスティングについて",
-          hostingBody:
-            "このサイトは静的ファイルとして配信されます。信頼性向上や不正利用防止のため、ホスティング提供元が標準的なアクセスログ(IP アドレス・リクエスト時刻など)を記録する場合があります。これらのログにあなたが処理した画像の内容は含まれません。",
-          changesTitle: "本ポリシーの変更",
-          changesBody:
-            "本ポリシーが変更された場合は、上部の「最終更新日」も更新されます。ただし「登録不要・アップロードなし・追跡なし」という核心の約束は変わりません。",
-        },
-        backShort: "← ジェネレーターに戻る",
-      },
-    },
-  },
+  en: { translation: en },
+  ja: { translation: ja },
+  zh: { translation: zh },
+  es: { translation: es },
+  ar: { translation: ar },
+  de: { translation: de },
+  pt: { translation: pt },
+  fr: { translation: fr },
+  hi: { translation: hi },
+  ko: { translation: ko },
+  kk: { translation: kk },
 };
 
 i18n.use(initReactI18next).init({

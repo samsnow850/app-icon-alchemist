@@ -42,9 +42,7 @@ export const LanguageSwitcher = () => {
         aria-label={t("lang.label")}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className={`group inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-background px-2.5 text-xs font-semibold uppercase tracking-wider text-foreground transition-all hover:border-foreground/40 ${
-          expanded ? "pr-3" : ""
-        }`}
+        className="group inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-xs font-semibold uppercase tracking-wider text-foreground transition-all hover:border-foreground/40"
       >
         <span className="text-base leading-none" aria-hidden>
           {currentLang.flag}
@@ -57,10 +55,7 @@ export const LanguageSwitcher = () => {
           <span className="ml-1 normal-case tracking-normal">{currentLang.label}</span>
         </span>
         <ChevronDown
-          className={`h-3.5 w-3.5 shrink-0 transition-transform ${open ? "rotate-180" : ""} ${
-            expanded ? "opacity-100" : "opacity-0 -ml-1.5 w-0"
-          }`}
-          style={expanded ? {} : { transitionDelay: "0ms" }}
+          className={`h-3.5 w-3.5 shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
 

@@ -61,7 +61,17 @@ const en = {
       "Your image is {{w}}×{{h}}. For best results, upload a square 1024×1024 image. We'll still generate, but quality may suffer.",
   },
   name: { label: "File name", hint: "Used as the zip name and root folder.", placeholder: "AppIcon" },
-  platforms: { title: "Platforms", total: "Total icons" },
+  platforms: {
+    title: "Platforms",
+    total: "Total icons",
+    items: {
+      iphone: { label: "iPhone", description: "iOS app icons for iPhone (notification, settings, spotlight, app, marketing)" },
+      ipad: { label: "iPad", description: "iPadOS app icons (notification, settings, spotlight, app, Pro, marketing)" },
+      watchos: { label: "watchOS", description: "Apple Watch icons (notification, settings, home screen, short look, marketing)" },
+      macos: { label: "macOS", description: "Mac app icons (16, 32, 64, 128, 256, 512 @1x and @2x, plus 1024 marketing)" },
+      android: { label: "Android", description: "Launcher icons for hdpi, xhdpi, xxhdpi, xxxhdpi densities" },
+    },
+  },
   footer: {
     heading: "Free, forever.",
     body: "A public tool for designers and developers. No ads, no signup, no payments — every pixel processed in your browser.",
@@ -140,7 +150,17 @@ const ja = {
     warning: "画像サイズは {{w}}×{{h}} です。最良の結果を得るには 1024×1024 の正方形画像を使用してください。生成は可能ですが、品質が低下する場合があります。",
   },
   name: { label: "ファイル名", hint: "ZIP 名とルートフォルダー名に使用されます。", placeholder: "AppIcon" },
-  platforms: { title: "プラットフォーム", total: "アイコン合計" },
+  platforms: {
+    title: "プラットフォーム",
+    total: "アイコン合計",
+    items: {
+      iphone: { label: "iPhone", description: "iPhone 用 iOS アプリアイコン(通知・設定・Spotlight・アプリ・マーケティング)" },
+      ipad: { label: "iPad", description: "iPadOS アプリアイコン(通知・設定・Spotlight・アプリ・Pro・マーケティング)" },
+      watchos: { label: "watchOS", description: "Apple Watch アイコン(通知・設定・ホーム画面・ショートルック・マーケティング)" },
+      macos: { label: "macOS", description: "Mac アプリアイコン(16・32・64・128・256・512 の @1x と @2x、および 1024 マーケティング)" },
+      android: { label: "Android", description: "hdpi、xhdpi、xxhdpi、xxxhdpi の密度向けランチャーアイコン" },
+    },
+  },
   footer: {
     heading: "ずっと無料。",
     body: "デザイナーと開発者のための公開ツールです。広告・登録・支払いは一切なし — すべてブラウザ内で処理されます。",
@@ -209,7 +229,17 @@ const zh = {
     warning: "您的图片为 {{w}}×{{h}}。为获得最佳效果,请上传 1024×1024 的方形图片。仍可生成,但质量可能下降。",
   },
   name: { label: "文件名", hint: "用作 ZIP 名称和根文件夹。", placeholder: "AppIcon" },
-  platforms: { title: "平台", total: "图标总数" },
+  platforms: {
+    title: "平台",
+    total: "图标总数",
+    items: {
+      iphone: { label: "iPhone", description: "iPhone 的 iOS 应用图标(通知、设置、Spotlight、应用、营销)" },
+      ipad: { label: "iPad", description: "iPadOS 应用图标(通知、设置、Spotlight、应用、Pro、营销)" },
+      watchos: { label: "watchOS", description: "Apple Watch 图标(通知、设置、主屏幕、简短查看、营销)" },
+      macos: { label: "macOS", description: "Mac 应用图标(16、32、64、128、256、512 的 @1x 与 @2x,以及 1024 营销)" },
+      android: { label: "Android", description: "适用于 hdpi、xhdpi、xxhdpi、xxxhdpi 密度的启动器图标" },
+    },
+  },
   footer: {
     heading: "永久免费。",
     body: "面向设计师和开发者的公共工具。无广告、无注册、无付费 — 所有像素均在您的浏览器中处理。",
@@ -278,7 +308,17 @@ const es = {
     warning: "Tu imagen es {{w}}×{{h}}. Para mejores resultados, sube una imagen cuadrada de 1024×1024. Aún se generará, pero la calidad puede verse afectada.",
   },
   name: { label: "Nombre del archivo", hint: "Se usa como nombre del ZIP y carpeta raíz.", placeholder: "AppIcon" },
-  platforms: { title: "Plataformas", total: "Iconos totales" },
+  platforms: {
+    title: "Plataformas",
+    total: "Iconos totales",
+    items: {
+      iphone: { label: "iPhone", description: "Iconos de iOS para iPhone (notificación, ajustes, spotlight, app, marketing)" },
+      ipad: { label: "iPad", description: "Iconos de iPadOS (notificación, ajustes, spotlight, app, Pro, marketing)" },
+      watchos: { label: "watchOS", description: "Iconos de Apple Watch (notificación, ajustes, pantalla de inicio, vista corta, marketing)" },
+      macos: { label: "macOS", description: "Iconos de apps de Mac (16, 32, 64, 128, 256, 512 @1x y @2x, más 1024 marketing)" },
+      android: { label: "Android", description: "Iconos de lanzador para densidades hdpi, xhdpi, xxhdpi, xxxhdpi" },
+    },
+  },
   footer: {
     heading: "Gratis, para siempre.",
     body: "Una herramienta pública para diseñadores y desarrolladores. Sin anuncios, sin registro, sin pagos — cada píxel se procesa en tu navegador.",
@@ -347,7 +387,17 @@ const ar = {
     warning: "صورتك بحجم {{w}}×{{h}}. للحصول على أفضل النتائج، ارفع صورة مربعة 1024×1024. سنقوم بالإنشاء، لكن الجودة قد تتأثر.",
   },
   name: { label: "اسم الملف", hint: "يستخدم كاسم ZIP والمجلد الجذري.", placeholder: "AppIcon" },
-  platforms: { title: "المنصات", total: "إجمالي الأيقونات" },
+  platforms: {
+    title: "المنصات",
+    total: "إجمالي الأيقونات",
+    items: {
+      iphone: { label: "iPhone", description: "أيقونات تطبيقات iOS للآيفون (إشعار، إعدادات، spotlight، تطبيق، تسويق)" },
+      ipad: { label: "iPad", description: "أيقونات تطبيقات iPadOS (إشعار، إعدادات، spotlight، تطبيق، Pro، تسويق)" },
+      watchos: { label: "watchOS", description: "أيقونات Apple Watch (إشعار، إعدادات، الشاشة الرئيسية، نظرة قصيرة، تسويق)" },
+      macos: { label: "macOS", description: "أيقونات تطبيقات Mac (16، 32، 64، 128، 256، 512 بـ @1x و @2x، بالإضافة إلى 1024 للتسويق)" },
+      android: { label: "Android", description: "أيقونات المشغّل لكثافات hdpi و xhdpi و xxhdpi و xxxhdpi" },
+    },
+  },
   footer: {
     heading: "مجاني، إلى الأبد.",
     body: "أداة عامة للمصممين والمطورين. بدون إعلانات أو تسجيل أو مدفوعات — تتم معالجة كل بكسل في متصفحك.",
@@ -416,7 +466,17 @@ const de = {
     warning: "Dein Bild ist {{w}}×{{h}}. Für beste Ergebnisse lade ein quadratisches 1024×1024-Bild hoch. Wir generieren trotzdem, aber die Qualität kann leiden.",
   },
   name: { label: "Dateiname", hint: "Wird als ZIP-Name und Hauptordner verwendet.", placeholder: "AppIcon" },
-  platforms: { title: "Plattformen", total: "Icons gesamt" },
+  platforms: {
+    title: "Plattformen",
+    total: "Icons gesamt",
+    items: {
+      iphone: { label: "iPhone", description: "iOS-App-Icons für iPhone (Benachrichtigung, Einstellungen, Spotlight, App, Marketing)" },
+      ipad: { label: "iPad", description: "iPadOS-App-Icons (Benachrichtigung, Einstellungen, Spotlight, App, Pro, Marketing)" },
+      watchos: { label: "watchOS", description: "Apple Watch Icons (Benachrichtigung, Einstellungen, Startbildschirm, Kurzansicht, Marketing)" },
+      macos: { label: "macOS", description: "Mac-App-Icons (16, 32, 64, 128, 256, 512 @1x und @2x, plus 1024 Marketing)" },
+      android: { label: "Android", description: "Launcher-Icons für hdpi-, xhdpi-, xxhdpi-, xxxhdpi-Dichten" },
+    },
+  },
   footer: {
     heading: "Für immer kostenlos.",
     body: "Ein öffentliches Tool für Designer und Entwickler. Keine Werbung, keine Anmeldung, keine Zahlungen — jeder Pixel wird in deinem Browser verarbeitet.",
@@ -485,7 +545,17 @@ const pt = {
     warning: "Sua imagem é {{w}}×{{h}}. Para melhores resultados, envie uma imagem quadrada 1024×1024. Ainda geramos, mas a qualidade pode cair.",
   },
   name: { label: "Nome do arquivo", hint: "Usado como nome do ZIP e pasta raiz.", placeholder: "AppIcon" },
-  platforms: { title: "Plataformas", total: "Total de ícones" },
+  platforms: {
+    title: "Plataformas",
+    total: "Total de ícones",
+    items: {
+      iphone: { label: "iPhone", description: "Ícones de app iOS para iPhone (notificação, ajustes, spotlight, app, marketing)" },
+      ipad: { label: "iPad", description: "Ícones de app iPadOS (notificação, ajustes, spotlight, app, Pro, marketing)" },
+      watchos: { label: "watchOS", description: "Ícones do Apple Watch (notificação, ajustes, tela inicial, visão curta, marketing)" },
+      macos: { label: "macOS", description: "Ícones de app Mac (16, 32, 64, 128, 256, 512 @1x e @2x, mais 1024 marketing)" },
+      android: { label: "Android", description: "Ícones de inicializador para densidades hdpi, xhdpi, xxhdpi, xxxhdpi" },
+    },
+  },
   footer: {
     heading: "Grátis, para sempre.",
     body: "Uma ferramenta pública para designers e desenvolvedores. Sem anúncios, sem cadastro, sem pagamentos — cada pixel é processado no seu navegador.",
@@ -554,7 +624,17 @@ const fr = {
     warning: "Votre image fait {{w}}×{{h}}. Pour de meilleurs résultats, importez une image carrée 1024×1024. La génération aura lieu, mais la qualité peut souffrir.",
   },
   name: { label: "Nom du fichier", hint: "Utilisé comme nom du ZIP et dossier racine.", placeholder: "AppIcon" },
-  platforms: { title: "Plateformes", total: "Total d'icônes" },
+  platforms: {
+    title: "Plateformes",
+    total: "Total d'icônes",
+    items: {
+      iphone: { label: "iPhone", description: "Icônes d'app iOS pour iPhone (notification, réglages, spotlight, app, marketing)" },
+      ipad: { label: "iPad", description: "Icônes d'app iPadOS (notification, réglages, spotlight, app, Pro, marketing)" },
+      watchos: { label: "watchOS", description: "Icônes Apple Watch (notification, réglages, écran d'accueil, aperçu court, marketing)" },
+      macos: { label: "macOS", description: "Icônes d'app Mac (16, 32, 64, 128, 256, 512 @1x et @2x, plus 1024 marketing)" },
+      android: { label: "Android", description: "Icônes de lanceur pour les densités hdpi, xhdpi, xxhdpi, xxxhdpi" },
+    },
+  },
   footer: {
     heading: "Gratuit, pour toujours.",
     body: "Un outil public pour designers et développeurs. Sans pub, sans inscription, sans paiement — chaque pixel est traité dans votre navigateur.",
@@ -623,7 +703,17 @@ const hi = {
     warning: "आपकी इमेज {{w}}×{{h}} है। बेहतर परिणाम के लिए 1024×1024 स्क्वायर इमेज अपलोड करें। जनरेट होगा पर गुणवत्ता प्रभावित हो सकती है।",
   },
   name: { label: "फ़ाइल का नाम", hint: "ZIP नाम और रूट फ़ोल्डर के रूप में उपयोग।", placeholder: "AppIcon" },
-  platforms: { title: "प्लेटफ़ॉर्म", total: "कुल आइकन" },
+  platforms: {
+    title: "प्लेटफ़ॉर्म",
+    total: "कुल आइकन",
+    items: {
+      iphone: { label: "iPhone", description: "iPhone के लिए iOS ऐप आइकन (नोटिफ़िकेशन, सेटिंग्स, स्पॉटलाइट, ऐप, मार्केटिंग)" },
+      ipad: { label: "iPad", description: "iPadOS ऐप आइकन (नोटिफ़िकेशन, सेटिंग्स, स्पॉटलाइट, ऐप, Pro, मार्केटिंग)" },
+      watchos: { label: "watchOS", description: "Apple Watch आइकन (नोटिफ़िकेशन, सेटिंग्स, होम स्क्रीन, शॉर्ट लुक, मार्केटिंग)" },
+      macos: { label: "macOS", description: "Mac ऐप आइकन (16, 32, 64, 128, 256, 512 @1x और @2x, साथ ही 1024 मार्केटिंग)" },
+      android: { label: "Android", description: "hdpi, xhdpi, xxhdpi, xxxhdpi घनत्व के लिए लॉन्चर आइकन" },
+    },
+  },
   footer: {
     heading: "हमेशा के लिए मुफ़्त।",
     body: "डिज़ाइनरों और डेवलपर्स के लिए एक सार्वजनिक टूल। कोई विज्ञापन, साइनअप या भुगतान नहीं — हर पिक्सेल आपके ब्राउज़र में प्रोसेस होता है।",
@@ -692,7 +782,17 @@ const ko = {
     warning: "이미지 크기가 {{w}}×{{h}}입니다. 최상의 결과를 위해 1024×1024 정사각형 이미지를 업로드하세요. 생성은 가능하지만 품질이 떨어질 수 있습니다.",
   },
   name: { label: "파일 이름", hint: "ZIP 이름과 루트 폴더로 사용됩니다.", placeholder: "AppIcon" },
-  platforms: { title: "플랫폼", total: "총 아이콘" },
+  platforms: {
+    title: "플랫폼",
+    total: "총 아이콘",
+    items: {
+      iphone: { label: "iPhone", description: "iPhone용 iOS 앱 아이콘(알림, 설정, 스포트라이트, 앱, 마케팅)" },
+      ipad: { label: "iPad", description: "iPadOS 앱 아이콘(알림, 설정, 스포트라이트, 앱, Pro, 마케팅)" },
+      watchos: { label: "watchOS", description: "Apple Watch 아이콘(알림, 설정, 홈 화면, 짧은 보기, 마케팅)" },
+      macos: { label: "macOS", description: "Mac 앱 아이콘(16, 32, 64, 128, 256, 512 @1x 및 @2x, 그리고 1024 마케팅)" },
+      android: { label: "Android", description: "hdpi, xhdpi, xxhdpi, xxxhdpi 밀도의 런처 아이콘" },
+    },
+  },
   footer: {
     heading: "영원히 무료.",
     body: "디자이너와 개발자를 위한 공개 도구. 광고, 가입, 결제 없음 — 모든 픽셀이 브라우저에서 처리됩니다.",
@@ -761,7 +861,17 @@ const kk = {
     warning: "Сіздің суретіңіз {{w}}×{{h}}. Үздік нәтиже үшін 1024×1024 шаршы сурет жүктеңіз. Жасаймыз, бірақ сапа төмендеуі мүмкін.",
   },
   name: { label: "Файл атауы", hint: "ZIP атауы және түбірлік қалта ретінде пайдаланылады.", placeholder: "AppIcon" },
-  platforms: { title: "Платформалар", total: "Барлық таңбашалар" },
+  platforms: {
+    title: "Платформалар",
+    total: "Барлық таңбашалар",
+    items: {
+      iphone: { label: "iPhone", description: "iPhone үшін iOS қолданба таңбашалары (хабарландыру, баптаулар, spotlight, қолданба, маркетинг)" },
+      ipad: { label: "iPad", description: "iPadOS қолданба таңбашалары (хабарландыру, баптаулар, spotlight, қолданба, Pro, маркетинг)" },
+      watchos: { label: "watchOS", description: "Apple Watch таңбашалары (хабарландыру, баптаулар, басты экран, қысқа көрініс, маркетинг)" },
+      macos: { label: "macOS", description: "Mac қолданба таңбашалары (16, 32, 64, 128, 256, 512 @1x және @2x, қоса 1024 маркетинг)" },
+      android: { label: "Android", description: "hdpi, xhdpi, xxhdpi, xxxhdpi тығыздықтарына арналған іске қосушы таңбашалары" },
+    },
+  },
   footer: {
     heading: "Мәңгі тегін.",
     body: "Дизайнерлер мен әзірлеушілерге арналған ашық құрал. Жарнама, тіркелу, төлем жоқ — әр пиксель браузеріңізде өңделеді.",

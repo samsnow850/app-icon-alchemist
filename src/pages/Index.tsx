@@ -316,12 +316,12 @@ const Index = () => {
                   <Checkbox checked={on} className="pointer-events-none h-5 w-5 rounded-md" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="font-display text-base font-semibold tracking-tight">{p.label}</p>
+                      <p className="font-display text-base font-semibold tracking-tight">{t(`platforms.items.${p.id}.label`, { defaultValue: p.label })}</p>
                       <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-semibold tabular-nums text-foreground/70">
                         {p.count}
                       </span>
                     </div>
-                    <p className="mt-1 line-clamp-2 text-xs text-foreground/60">{p.description}</p>
+                    <p className="mt-1 line-clamp-2 text-xs text-foreground/60">{t(`platforms.items.${p.id}.description`, { defaultValue: p.description })}</p>
                   </div>
                 </button>
               );

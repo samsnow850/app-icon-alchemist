@@ -24,6 +24,7 @@ const Index = () => {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [warning, setWarning] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback(async (f: File) => {

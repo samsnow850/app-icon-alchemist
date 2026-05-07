@@ -1,24 +1,16 @@
-import { Link } from "react-router-dom";
-import { ArrowLeft, Shield, Lock, UserX, Cpu } from "lucide-react";
+import { Shield, Lock, UserX, Cpu } from "lucide-react";
 import { Trans, useTranslation } from "react-i18next";
-import { useLocalizedHref } from "@/lib/routing";
+import SiteHeader from "@/components/SiteHeader";
 
 const Privacy = () => {
   const { t } = useTranslation();
-  const localized = useLocalizedHref();
 
   const bullets = t("privacy.sections.bullets", { returnObjects: true }) as string[];
 
   return (
     <div className="min-h-screen bg-background bg-gradient-mesh">
+      <SiteHeader />
       <div className="container max-w-3xl py-12 md:py-20">
-        <Link
-          to={localized("/")}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {t("privacy.back")}
-        </Link>
 
         <header className="mt-8 mb-10">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
@@ -102,12 +94,6 @@ const Privacy = () => {
             </p>
           </section>
         </article>
-
-        <footer className="mt-16 text-center text-xs text-muted-foreground">
-          <Link to={localized("/")} className="underline-offset-4 hover:text-foreground hover:underline">
-            {t("privacy.backShort")}
-          </Link>
-        </footer>
       </div>
     </div>
   );

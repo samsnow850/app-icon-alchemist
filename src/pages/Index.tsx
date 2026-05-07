@@ -111,10 +111,10 @@ const Index = () => {
       <div className="container max-w-6xl py-16 md:py-28">
         {/* Editorial hero */}
         <header className="mb-20 text-center">
-          <div className="mb-8 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/70">
-            <span className="h-px w-8 bg-foreground/40" />
+          <div className="glass glass-highlight mb-8 inline-flex items-center gap-2 rounded-full px-5 py-2 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/70">
+            <span className="h-px w-6 bg-foreground/30" />
             {t("hero.kicker")}
-            <span className="h-px w-8 bg-foreground/40" />
+            <span className="h-px w-6 bg-foreground/30" />
           </div>
           <h1 className="mx-auto max-w-4xl text-balance font-display text-5xl font-semibold leading-[0.95] tracking-tight text-foreground md:text-7xl lg:text-[88px]">
             {t("hero.titleLine1")}
@@ -129,7 +129,7 @@ const Index = () => {
               size="lg"
               onClick={() => (img ? handleGenerate() : inputRef.current?.click())}
               disabled={busy}
-              className="group h-14 rounded-full bg-primary px-8 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-elegant transition-all hover:bg-primary/90"
+              className="group h-14 rounded-full bg-gradient-primary px-8 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110"
             >
               {busy ? (
                 <>
@@ -166,8 +166,8 @@ const Index = () => {
                 }}
                 onDragLeave={() => setDragOver(false)}
                 onDrop={onDrop}
-                className={`relative flex aspect-square max-h-[460px] cursor-pointer flex-col items-center justify-center rounded-[2rem] border bg-card p-10 text-center transition-all hover:border-foreground/40 ${
-                  dragOver ? "border-foreground bg-accent" : "border-border"
+                className={`glass glass-highlight relative flex aspect-square max-h-[460px] cursor-pointer flex-col items-center justify-center rounded-[2rem] p-10 text-center transition-all hover:bg-white/40 ${
+                  dragOver ? "!bg-white/50 ring-2 ring-primary/30" : ""
                 }`}
               >
                 <input
@@ -180,17 +180,17 @@ const Index = () => {
                     if (f) handleFile(f);
                   }}
                 />
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary">
-                  <Upload className="h-5 w-5 text-primary-foreground" />
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-primary shadow-lg">
+                  <Upload className="h-5 w-5 text-white" />
                 </div>
                 <p className="font-display text-2xl font-semibold tracking-tight">{t("dropzone.title")}</p>
                 <p className="mt-2 text-sm text-foreground/60">{t("dropzone.sub")}</p>
                 <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/40">{t("dropzone.browse")}</p>
               </label>
             ) : (
-              <div className="rounded-[2rem] border border-border bg-card p-6">
+              <div className="glass glass-highlight rounded-[2rem] p-6">
                 <div className="flex items-start gap-5">
-                  <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl bg-secondary">
+                  <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl bg-white/20">
                     {previewUrl && <img src={previewUrl} alt="Uploaded icon preview" className="h-full w-full object-cover" />}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -212,7 +212,7 @@ const Index = () => {
                   </div>
                 </div>
                 {warning && (
-                  <div className="mt-4 flex items-start gap-2 rounded-2xl bg-accent p-3 text-xs text-accent-foreground">
+                  <div className="mt-4 flex items-start gap-2 rounded-2xl bg-white/20 p-3 text-xs text-foreground/80">
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>{warning}</span>
                   </div>
@@ -221,7 +221,7 @@ const Index = () => {
             )}
 
             {/* Name */}
-            <div className="rounded-[2rem] border border-border bg-card p-6">
+            <div className="glass glass-highlight rounded-[2rem] p-6">
               <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/60">
                 {t("name.label")}
               </Label>
@@ -231,7 +231,7 @@ const Index = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t("name.placeholder")}
-                className="mt-3 h-12 rounded-full border-border bg-background px-5"
+                className="mt-3 h-12 rounded-full border-white/30 bg-white/30 px-5 backdrop-blur-sm"
               />
             </div>
 
@@ -240,7 +240,7 @@ const Index = () => {
               size="lg"
               onClick={handleGenerate}
               disabled={!img || busy || selected.size === 0}
-              className="group h-14 w-full rounded-full bg-primary text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-40"
+              className="group h-14 w-full rounded-full bg-gradient-primary text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110 disabled:opacity-40"
             >
               {busy ? (
                 <>
@@ -267,17 +267,17 @@ const Index = () => {
                 <button
                   key={p.id}
                   onClick={() => togglePlatform(p.id)}
-                  className={`group flex w-full items-center gap-4 rounded-2xl border p-4 text-left transition-all ${
+                  className={`group flex w-full items-center gap-4 rounded-2xl p-4 text-left transition-all ${
                     on
-                      ? "border-foreground/20 bg-card"
-                      : "border-border bg-transparent opacity-60 hover:opacity-100"
+                      ? "glass glass-highlight"
+                      : "border border-white/20 bg-white/10 opacity-60 backdrop-blur-sm hover:opacity-100"
                   }`}
                 >
                   <Checkbox checked={on} className="pointer-events-none h-5 w-5 rounded-md" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <p className="font-display text-base font-semibold tracking-tight">{t(`platforms.items.${p.id}.label`, { defaultValue: p.label })}</p>
-                      <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-semibold tabular-nums text-foreground/70">
+                      <span className="rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-foreground/70">
                         {p.count}
                       </span>
                     </div>
@@ -287,7 +287,7 @@ const Index = () => {
               );
             })}
 
-            <div className="mt-4 flex items-center justify-between rounded-2xl bg-primary p-5 text-primary-foreground">
+            <div className="mt-4 flex items-center justify-between rounded-2xl bg-gradient-primary p-5 text-white shadow-lg">
               <div className="flex items-center gap-2">
                 <Check className="h-4 w-4" />
                 <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">{t("platforms.total")}</span>
@@ -297,7 +297,7 @@ const Index = () => {
           </div>
         </div>
 
-        <footer className="mt-28 border-t border-border pt-10">
+        <footer className="glass glass-highlight mt-28 rounded-[2rem] p-10">
           <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
             <div>
               <p className="font-display text-2xl font-semibold tracking-tight md:text-3xl">

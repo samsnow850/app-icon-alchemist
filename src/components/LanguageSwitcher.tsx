@@ -42,7 +42,7 @@ export const LanguageSwitcher = () => {
         aria-label={t("lang.label")}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="group inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-xs font-semibold uppercase tracking-wider text-foreground transition-all hover:border-foreground/40"
+        className="glass group inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold uppercase tracking-wider text-foreground transition-all hover:bg-white/30"
       >
         <span className="text-base leading-none" aria-hidden>
           {currentLang.flag}
@@ -62,7 +62,7 @@ export const LanguageSwitcher = () => {
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 top-full z-50 mt-2 min-w-[180px] overflow-hidden rounded-2xl border border-border bg-card shadow-elegant"
+          className="glass-heavy glass-highlight absolute right-0 top-full z-50 mt-2 min-w-[180px] overflow-hidden rounded-2xl"
         >
           {SUPPORTED_LANGUAGES.map((lang) => {
             const active = lang.code === current;
@@ -72,7 +72,7 @@ export const LanguageSwitcher = () => {
                 role="option"
                 aria-selected={active}
                 onClick={() => onPick(lang.code)}
-                className={`flex w-full items-center justify-between gap-3 px-3.5 py-2.5 text-left text-sm transition-colors hover:bg-accent ${
+                className={`flex w-full items-center justify-between gap-3 px-3.5 py-2.5 text-left text-sm transition-colors hover:bg-white/20 ${
                   active ? "font-semibold" : "font-medium"
                 }`}
               >

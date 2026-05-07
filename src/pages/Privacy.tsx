@@ -6,11 +6,11 @@ const Privacy = () => {
   const bullets = t("privacy.sections.bullets", { returnObjects: true }) as string[];
 
   return (
-    <div className="bg-gradient-mesh">
+    <div>
       <div className="container max-w-3xl py-12 md:py-20">
 
         <header className="mt-8 mb-10">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
+          <div className="glass glass-highlight mb-5 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-foreground/70">
             <Shield className="h-3.5 w-3.5 text-primary" />
             {t("privacy.kicker")}
           </div>
@@ -26,24 +26,24 @@ const Privacy = () => {
         </header>
 
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="glass glass-highlight rounded-2xl p-4">
             <UserX className="h-5 w-5 text-primary" />
             <p className="mt-2 text-sm font-semibold">{t("privacy.chips.noSignup")}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{t("privacy.chips.noSignupSub")}</p>
           </div>
-          <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="glass glass-highlight rounded-2xl p-4">
             <Cpu className="h-5 w-5 text-primary" />
             <p className="mt-2 text-sm font-semibold">{t("privacy.chips.onDevice")}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{t("privacy.chips.onDeviceSub")}</p>
           </div>
-          <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="glass glass-highlight rounded-2xl p-4">
             <Lock className="h-5 w-5 text-primary" />
             <p className="mt-2 text-sm font-semibold">{t("privacy.chips.noTracking")}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{t("privacy.chips.noTrackingSub")}</p>
           </div>
         </div>
 
-        <article className="prose prose-sm mt-10 max-w-none space-y-8 text-foreground">
+        <article className="glass glass-highlight mt-10 max-w-none space-y-8 rounded-[2rem] p-8 text-foreground">
           <section>
             <h2 className="text-xl font-semibold">{t("privacy.sections.noSignupTitle")}</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

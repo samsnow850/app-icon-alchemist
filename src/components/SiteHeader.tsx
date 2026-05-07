@@ -30,7 +30,7 @@ export const SiteHeader = () => {
 
   return (
     <nav className="sticky top-3 z-40 w-full px-3 sm:top-4 sm:px-4">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-border/60 bg-background/80 px-3 py-2 shadow-elegant backdrop-blur-md sm:px-5 sm:py-2.5">
+      <div className="glass glass-highlight mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full px-3 py-2 sm:px-5 sm:py-2.5">
         <Link to={localized("/")} className="flex items-center gap-2.5">
           <div className="grid grid-cols-2 gap-0.5">
             <span className="h-2 w-2 rounded-sm bg-foreground" />
@@ -41,13 +41,13 @@ export const SiteHeader = () => {
           <span className="text-sm font-semibold tracking-tight">Icon Forge</span>
         </Link>
         <div className="hidden items-center gap-8 md:flex">
-          <Link to={localized("/#generator")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+          <Link to={localized("/#generator")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/70 transition-colors hover:text-foreground">
             {t("nav.generator")}
           </Link>
-          <Link to={localized("/#platforms")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+          <Link to={localized("/#platforms")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/70 transition-colors hover:text-foreground">
             {t("nav.platforms")}
           </Link>
-          <Link to={localized("/privacy")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+          <Link to={localized("/privacy")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/70 transition-colors hover:text-foreground">
             {t("nav.privacy")}
           </Link>
         </div>
@@ -56,7 +56,7 @@ export const SiteHeader = () => {
             href="https://github.com/samsnow850/app-icon-alchemist"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-primary px-4 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:shadow-lg hover:brightness-110"
           >
             {t("nav.github")}
             <span aria-hidden>›</span>
@@ -70,7 +70,7 @@ export const SiteHeader = () => {
             aria-label="Menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:border-foreground/40"
+            className="glass relative inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-white/30"
           >
             <Menu
               className={`absolute h-4 w-4 transition-all duration-300 ${
@@ -86,7 +86,7 @@ export const SiteHeader = () => {
         </div>
       </div>
 
-      {/* Mobile dropdown — floating overlay */}
+      {/* Mobile dropdown — floating glass overlay */}
       <div
         className={`absolute left-0 right-0 top-full px-3 sm:px-4 md:hidden ${
           menuOpen ? "pointer-events-auto" : "pointer-events-none"
@@ -98,15 +98,15 @@ export const SiteHeader = () => {
           }`}
           aria-hidden={!menuOpen}
         >
-          <div className="rounded-3xl border border-border/60 bg-background/95 p-3 shadow-elegant backdrop-blur-md">
+          <div className="glass-heavy glass-highlight rounded-3xl p-3">
           <div className="flex flex-col">
-            <Link onClick={close} to={localized("/#generator")} className="rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:bg-accent">
+            <Link onClick={close} to={localized("/#generator")} className="rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 transition-colors hover:bg-white/20">
               {t("nav.generator")}
             </Link>
-            <Link onClick={close} to={localized("/#platforms")} className="rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:bg-accent">
+            <Link onClick={close} to={localized("/#platforms")} className="rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 transition-colors hover:bg-white/20">
               {t("nav.platforms")}
             </Link>
-            <Link onClick={close} to={localized("/privacy")} className="rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:bg-accent">
+            <Link onClick={close} to={localized("/privacy")} className="rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 transition-colors hover:bg-white/20">
               {t("nav.privacy")}
             </Link>
             <a
@@ -114,7 +114,7 @@ export const SiteHeader = () => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={close}
-              className="mt-2 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground hover:bg-primary/90"
+              className="mt-2 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-gradient-primary px-4 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:shadow-lg hover:brightness-110"
             >
               {t("nav.github")}
               <span aria-hidden>›</span>

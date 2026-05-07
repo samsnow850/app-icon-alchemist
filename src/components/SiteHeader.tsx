@@ -120,6 +120,7 @@ export const SiteHeader = () => {
               <span aria-hidden>›</span>
             </a>
           </div>
+          </div>
         </div>
       </div>
     </nav>

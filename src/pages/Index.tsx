@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { Upload, Download, Image as ImageIcon, Check, X, Loader2, AlertTriangle, Github } from "lucide-react";
+import { Upload, Download, Eye, Image as ImageIcon, Check, X, Loader2, AlertTriangle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,13 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
-import { generateZip, loadImage } from "@/lib/iconGenerator";
-import { useLocalizedHref } from "@/lib/routing";
-import SiteHeader from "@/components/SiteHeader";
+import { generateZip, generatePreview, loadImage } from "@/lib/iconGenerator";
+import IconPreviewGrid, { type PlatformPreview } from "@/components/IconPreviewGrid";
 
 const Index = () => {
   const { t } = useTranslation();
-  const localized = useLocalizedHref();
   const [file, setFile] = useState<File | null>(null);
   const [img, setImg] = useState<HTMLImageElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -22,9 +19,12 @@ const Index = () => {
   const [selected, setSelected] = useState<Set<string>>(new Set(PLATFORMS.map((p) => p.id)));
   const [dragOver, setDragOver] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [warning, setWarning] = useState<string | null>(null);
+  const [previews, setPreviews] = useState<PlatformPreview[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const handleFile = useCallback(async (f: File) => {
     if (!f.type.startsWith("image/")) {
@@ -100,25 +100,54 @@ const Index = () => {
     }
   };
 
+  const clearPreviews = () => {
+    previews.forEach((p) => p.icons.forEach((i) => URL.revokeObjectURL(i.url)));
+    setPreviews([]);
+  };
+
+  const handlePreview = async () => {
+    if (!img) return;
+    if (selected.size === 0) {
+      toast.error(t("toast.selectPlatform"));
+      return;
+    }
+    setPreviewing(true);
+    clearPreviews();
+    try {
+      const platforms = PLATFORMS.filter((p) => selected.has(p.id));
+      const results: PlatformPreview[] = [];
+      for (const platform of platforms) {
+        const icons = await generatePreview(img, platform);
+        results.push({ platform, icons });
+      }
+      setPreviews(results);
+      setTimeout(() => previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+    } catch (e) {
+      console.error(e);
+      toast.error(t("toast.genFail"));
+    } finally {
+      setPreviewing(false);
+    }
+  };
+
   const reset = () => {
     setFile(null);
     setImg(null);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setWarning(null);
+    clearPreviews();
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <>
       <div className="container max-w-6xl py-16 md:py-28">
         {/* Editorial hero */}
         <header className="mb-20 text-center">
-          <div className="mb-8 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/70">
-            <span className="h-px w-8 bg-foreground/40" />
+          <div className="glass glass-highlight mb-8 inline-flex items-center gap-2 rounded-full px-5 py-2 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/70">
+            <span className="h-px w-6 bg-foreground/30" />
             {t("hero.kicker")}
-            <span className="h-px w-8 bg-foreground/40" />
+            <span className="h-px w-6 bg-foreground/30" />
           </div>
           <h1 className="mx-auto max-w-4xl text-balance font-display text-5xl font-semibold leading-[0.95] tracking-tight text-foreground md:text-7xl lg:text-[88px]">
             {t("hero.titleLine1")}
@@ -131,18 +160,19 @@ const Index = () => {
           <div className="mt-10 flex flex-col items-center gap-4">
             <Button
               size="lg"
-              onClick={() => (img ? handleGenerate() : inputRef.current?.click())}
-              disabled={busy}
-              className="group h-14 rounded-full bg-primary px-8 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-elegant transition-all hover:bg-primary/90"
+              onClick={() => (img ? handlePreview() : inputRef.current?.click())}
+              disabled={busy || previewing}
+              className="group h-14 rounded-full bg-gradient-primary px-8 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110"
             >
-              {busy ? (
+              {previewing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
+                  {t("preview.generating", { defaultValue: "Generating preview…" })}
                 </>
               ) : img ? (
                 <>
-                  {t("hero.ctaGenerate", { count: totalSelected })}
+                  <Eye className="mr-2 h-4 w-4" />
+                  {t("preview.cta", { count: totalSelected, defaultValue: `Preview ${totalSelected} icons` })}
                   <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               ) : (
@@ -170,8 +200,8 @@ const Index = () => {
                 }}
                 onDragLeave={() => setDragOver(false)}
                 onDrop={onDrop}
-                className={`relative flex aspect-square max-h-[460px] cursor-pointer flex-col items-center justify-center rounded-[2rem] border bg-card p-10 text-center transition-all hover:border-foreground/40 ${
-                  dragOver ? "border-foreground bg-accent" : "border-border"
+                className={`glass glass-highlight relative flex aspect-square max-h-[460px] cursor-pointer flex-col items-center justify-center rounded-[2rem] p-10 text-center transition-all hover:bg-white/40 ${
+                  dragOver ? "!bg-white/50 ring-2 ring-primary/30" : ""
                 }`}
               >
                 <input
@@ -184,17 +214,17 @@ const Index = () => {
                     if (f) handleFile(f);
                   }}
                 />
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary">
-                  <Upload className="h-5 w-5 text-primary-foreground" />
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-primary shadow-lg">
+                  <Upload className="h-5 w-5 text-white" />
                 </div>
                 <p className="font-display text-2xl font-semibold tracking-tight">{t("dropzone.title")}</p>
                 <p className="mt-2 text-sm text-foreground/60">{t("dropzone.sub")}</p>
                 <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/40">{t("dropzone.browse")}</p>
               </label>
             ) : (
-              <div className="rounded-[2rem] border border-border bg-card p-6">
+              <div className="glass glass-highlight rounded-[2rem] p-6">
                 <div className="flex items-start gap-5">
-                  <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl bg-secondary">
+                  <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl bg-white/20">
                     {previewUrl && <img src={previewUrl} alt="Uploaded icon preview" className="h-full w-full object-cover" />}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -216,7 +246,7 @@ const Index = () => {
                   </div>
                 </div>
                 {warning && (
-                  <div className="mt-4 flex items-start gap-2 rounded-2xl bg-accent p-3 text-xs text-accent-foreground">
+                  <div className="mt-4 flex items-start gap-2 rounded-2xl bg-white/20 p-3 text-xs text-foreground/80">
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>{warning}</span>
                   </div>
@@ -225,7 +255,7 @@ const Index = () => {
             )}
 
             {/* Name */}
-            <div className="rounded-[2rem] border border-border bg-card p-6">
+            <div className="glass glass-highlight rounded-[2rem] p-6">
               <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/60">
                 {t("name.label")}
               </Label>
@@ -235,29 +265,49 @@ const Index = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t("name.placeholder")}
-                className="mt-3 h-12 rounded-full border-border bg-background px-5"
+                className="mt-3 h-12 rounded-full border-white/30 bg-white/30 px-5 backdrop-blur-sm"
               />
             </div>
 
-            {/* Generate button */}
-            <Button
-              size="lg"
-              onClick={handleGenerate}
-              disabled={!img || busy || selected.size === 0}
-              className="group h-14 w-full rounded-full bg-primary text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-40"
-            >
-              {busy ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
-                </>
-              ) : (
-                <>
-                  <Download className="mr-2 h-4 w-4" />
-                  {t("hero.ctaGenerate", { count: totalSelected })}
-                </>
-              )}
-            </Button>
+            {/* Preview + Download buttons */}
+            <div className="flex gap-3">
+              <Button
+                size="lg"
+                onClick={handlePreview}
+                disabled={!img || previewing || selected.size === 0}
+                className="group h-14 flex-1 rounded-full glass text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-all hover:bg-white/40 disabled:opacity-40"
+              >
+                {previewing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("preview.generating", { defaultValue: "Generating…" })}
+                  </>
+                ) : (
+                  <>
+                    <Eye className="mr-2 h-4 w-4" />
+                    {t("preview.button", { defaultValue: "Preview" })}
+                  </>
+                )}
+              </Button>
+              <Button
+                size="lg"
+                onClick={handleGenerate}
+                disabled={!img || busy || selected.size === 0}
+                className="group h-14 flex-1 rounded-full bg-gradient-primary text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110 disabled:opacity-40"
+              >
+                {busy ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
+                  </>
+                ) : (
+                  <>
+                    <Download className="mr-2 h-4 w-4" />
+                    {t("hero.ctaGenerate", { count: totalSelected })}
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Right: Platform cards */}
@@ -271,17 +321,17 @@ const Index = () => {
                 <button
                   key={p.id}
                   onClick={() => togglePlatform(p.id)}
-                  className={`group flex w-full items-center gap-4 rounded-2xl border p-4 text-left transition-all ${
+                  className={`group flex w-full items-center gap-4 rounded-2xl p-4 text-left transition-all ${
                     on
-                      ? "border-foreground/20 bg-card"
-                      : "border-border bg-transparent opacity-60 hover:opacity-100"
+                      ? "glass glass-highlight"
+                      : "border border-white/20 bg-white/10 opacity-60 backdrop-blur-sm hover:opacity-100"
                   }`}
                 >
                   <Checkbox checked={on} className="pointer-events-none h-5 w-5 rounded-md" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <p className="font-display text-base font-semibold tracking-tight">{t(`platforms.items.${p.id}.label`, { defaultValue: p.label })}</p>
-                      <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-semibold tabular-nums text-foreground/70">
+                      <span className="rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-foreground/70">
                         {p.count}
                       </span>
                     </div>
@@ -291,7 +341,7 @@ const Index = () => {
               );
             })}
 
-            <div className="mt-4 flex items-center justify-between rounded-2xl bg-primary p-5 text-primary-foreground">
+            <div className="mt-4 flex items-center justify-between rounded-2xl bg-gradient-primary p-5 text-white shadow-lg">
               <div className="flex items-center gap-2">
                 <Check className="h-4 w-4" />
                 <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">{t("platforms.total")}</span>
@@ -301,40 +351,35 @@ const Index = () => {
           </div>
         </div>
 
-        <footer className="mt-28 border-t border-border pt-10">
-          <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
-            <div>
-              <p className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
-                {t("footer.heading")}
-              </p>
-              <p className="mt-2 max-w-md text-sm text-foreground/60">
-                {t("footer.body")}
-              </p>
-            </div>
-            <div className="flex flex-col items-start gap-3 md:items-end">
-              <Link
-                to={localized("/privacy")}
-                className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/70 hover:text-foreground"
+        {/* Preview grid */}
+        {previews.length > 0 && (
+          <div ref={previewRef} className="mt-12">
+            <IconPreviewGrid previews={previews} />
+            <div className="mt-6 flex justify-center">
+              <Button
+                size="lg"
+                onClick={handleGenerate}
+                disabled={busy}
+                className="group h-14 rounded-full bg-gradient-primary px-10 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110"
               >
-                {t("footer.privacy")}
-              </Link>
-              <a
-                href="https://github.com/samsnow850/app-icon-alchemist"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/70 hover:text-foreground"
-              >
-                <Github className="h-3.5 w-3.5" />
-                {t("footer.github")}
-              </a>
+                {busy ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
+                  </>
+                ) : (
+                  <>
+                    <Download className="mr-2 h-4 w-4" />
+                    {t("preview.download", { count: totalSelected, defaultValue: `Download ${totalSelected} icons as ZIP` })}
+                  </>
+                )}
+              </Button>
             </div>
           </div>
-          <p className="mt-10 text-[11px] uppercase tracking-[0.18em] text-foreground/40">
-            © {new Date().getFullYear()} Icon Forge
-          </p>
-        </footer>
+        )}
+
       </div>
-    </div>
+    </>
   );
 };
 

@@ -86,18 +86,19 @@ export const SiteHeader = () => {
         </div>
       </div>
 
-      {/* Mobile dropdown — animated */}
+      {/* Mobile dropdown — floating overlay */}
       <div
-        className={`mx-auto max-w-6xl overflow-hidden transition-all duration-300 ease-out md:hidden ${
-          menuOpen ? "mt-2 max-h-[400px] opacity-100" : "mt-0 max-h-0 opacity-0"
+        className={`absolute left-0 right-0 top-full px-3 sm:px-4 md:hidden ${
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
-        aria-hidden={!menuOpen}
       >
         <div
-          className={`rounded-3xl border border-border/60 bg-background/95 p-3 shadow-elegant backdrop-blur-md transition-transform duration-300 ${
-            menuOpen ? "translate-y-0" : "-translate-y-2"
+          className={`mx-auto mt-2 max-w-6xl origin-top transition-all duration-300 ease-out ${
+            menuOpen ? "translate-y-0 scale-100 opacity-100" : "-translate-y-2 scale-95 opacity-0"
           }`}
+          aria-hidden={!menuOpen}
         >
+          <div className="rounded-3xl border border-border/60 bg-background/95 p-3 shadow-elegant backdrop-blur-md">
           <div className="flex flex-col">
             <Link onClick={close} to={localized("/#generator")} className="rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:bg-accent">
               {t("nav.generator")}
@@ -118,6 +119,7 @@ export const SiteHeader = () => {
               {t("nav.github")}
               <span aria-hidden>›</span>
             </a>
+          </div>
           </div>
         </div>
       </div>

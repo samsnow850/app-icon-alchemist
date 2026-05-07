@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { Upload, Download, Image as ImageIcon, Check, X, Loader2, AlertTriangle } from "lucide-react";
+import { Upload, Download, Eye, Image as ImageIcon, Check, X, Loader2, AlertTriangle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
-import { generateZip, loadImage } from "@/lib/iconGenerator";
+import { generateZip, generatePreview, loadImage } from "@/lib/iconGenerator";
+import IconPreviewGrid, { type PlatformPreview } from "@/components/IconPreviewGrid";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -18,9 +19,12 @@ const Index = () => {
   const [selected, setSelected] = useState<Set<string>>(new Set(PLATFORMS.map((p) => p.id)));
   const [dragOver, setDragOver] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [warning, setWarning] = useState<string | null>(null);
+  const [previews, setPreviews] = useState<PlatformPreview[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const handleFile = useCallback(async (f: File) => {
     if (!f.type.startsWith("image/")) {
@@ -96,12 +100,43 @@ const Index = () => {
     }
   };
 
+  const clearPreviews = () => {
+    previews.forEach((p) => p.icons.forEach((i) => URL.revokeObjectURL(i.url)));
+    setPreviews([]);
+  };
+
+  const handlePreview = async () => {
+    if (!img) return;
+    if (selected.size === 0) {
+      toast.error(t("toast.selectPlatform"));
+      return;
+    }
+    setPreviewing(true);
+    clearPreviews();
+    try {
+      const platforms = PLATFORMS.filter((p) => selected.has(p.id));
+      const results: PlatformPreview[] = [];
+      for (const platform of platforms) {
+        const icons = await generatePreview(img, platform);
+        results.push({ platform, icons });
+      }
+      setPreviews(results);
+      setTimeout(() => previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+    } catch (e) {
+      console.error(e);
+      toast.error(t("toast.genFail"));
+    } finally {
+      setPreviewing(false);
+    }
+  };
+
   const reset = () => {
     setFile(null);
     setImg(null);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setWarning(null);
+    clearPreviews();
   };
 
   return (
@@ -125,18 +160,19 @@ const Index = () => {
           <div className="mt-10 flex flex-col items-center gap-4">
             <Button
               size="lg"
-              onClick={() => (img ? handleGenerate() : inputRef.current?.click())}
-              disabled={busy}
+              onClick={() => (img ? handlePreview() : inputRef.current?.click())}
+              disabled={busy || previewing}
               className="group h-14 rounded-full bg-gradient-primary px-8 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110"
             >
-              {busy ? (
+              {previewing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
+                  {t("preview.generating", { defaultValue: "Generating preview…" })}
                 </>
               ) : img ? (
                 <>
-                  {t("hero.ctaGenerate", { count: totalSelected })}
+                  <Eye className="mr-2 h-4 w-4" />
+                  {t("preview.cta", { count: totalSelected, defaultValue: `Preview ${totalSelected} icons` })}
                   <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">›</span>
                 </>
               ) : (
@@ -233,25 +269,45 @@ const Index = () => {
               />
             </div>
 
-            {/* Generate button */}
-            <Button
-              size="lg"
-              onClick={handleGenerate}
-              disabled={!img || busy || selected.size === 0}
-              className="group h-14 w-full rounded-full bg-gradient-primary text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110 disabled:opacity-40"
-            >
-              {busy ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
-                </>
-              ) : (
-                <>
-                  <Download className="mr-2 h-4 w-4" />
-                  {t("hero.ctaGenerate", { count: totalSelected })}
-                </>
-              )}
-            </Button>
+            {/* Preview + Download buttons */}
+            <div className="flex gap-3">
+              <Button
+                size="lg"
+                onClick={handlePreview}
+                disabled={!img || previewing || selected.size === 0}
+                className="group h-14 flex-1 rounded-full glass text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-all hover:bg-white/40 disabled:opacity-40"
+              >
+                {previewing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("preview.generating", { defaultValue: "Generating…" })}
+                  </>
+                ) : (
+                  <>
+                    <Eye className="mr-2 h-4 w-4" />
+                    {t("preview.button", { defaultValue: "Preview" })}
+                  </>
+                )}
+              </Button>
+              <Button
+                size="lg"
+                onClick={handleGenerate}
+                disabled={!img || busy || selected.size === 0}
+                className="group h-14 flex-1 rounded-full bg-gradient-primary text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110 disabled:opacity-40"
+              >
+                {busy ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
+                  </>
+                ) : (
+                  <>
+                    <Download className="mr-2 h-4 w-4" />
+                    {t("hero.ctaGenerate", { count: totalSelected })}
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Right: Platform cards */}
@@ -294,6 +350,33 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        {/* Preview grid */}
+        {previews.length > 0 && (
+          <div ref={previewRef} className="mt-12">
+            <IconPreviewGrid previews={previews} />
+            <div className="mt-6 flex justify-center">
+              <Button
+                size="lg"
+                onClick={handleGenerate}
+                disabled={busy}
+                className="group h-14 rounded-full bg-gradient-primary px-10 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition-all hover:shadow-xl hover:brightness-110"
+              >
+                {busy ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("hero.ctaGenerating", { current: progress.current, total: progress.total })}
+                  </>
+                ) : (
+                  <>
+                    <Download className="mr-2 h-4 w-4" />
+                    {t("preview.download", { count: totalSelected, defaultValue: `Download ${totalSelected} icons as ZIP` })}
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
 
       </div>
     </>

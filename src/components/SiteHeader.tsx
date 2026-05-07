@@ -73,12 +73,12 @@ export const SiteHeader = () => {
             className="glass relative inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-white/30"
           >
             <Menu
-              className={`absolute h-4 w-4 transition-all duration-300 ${
+              className={`absolute h-4 w-4 motion-safe:transition-all motion-safe:duration-300 ${
                 menuOpen ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
               }`}
             />
             <X
-              className={`absolute h-4 w-4 transition-all duration-300 ${
+              className={`absolute h-4 w-4 motion-safe:transition-all motion-safe:duration-300 ${
                 menuOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"
               }`}
             />
@@ -93,8 +93,8 @@ export const SiteHeader = () => {
         }`}
       >
         <div
-          className={`mx-auto mt-2 max-w-6xl origin-top transition-all duration-300 ease-out ${
-            menuOpen ? "translate-y-0 scale-100 opacity-100" : "-translate-y-2 scale-95 opacity-0"
+          className={`mx-auto mt-2 max-w-6xl origin-top motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out ${
+            menuOpen ? "translate-y-0 scale-100 opacity-100" : "motion-safe:-translate-y-2 motion-safe:scale-95 opacity-0"
           }`}
           aria-hidden={!menuOpen}
         >

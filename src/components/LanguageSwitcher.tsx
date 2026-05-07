@@ -48,7 +48,7 @@ export const LanguageSwitcher = () => {
           {currentLang.flag}
         </span>
         <span
-          className={`overflow-hidden whitespace-nowrap transition-all duration-200 ${
+          className={`overflow-hidden whitespace-nowrap motion-safe:transition-all motion-safe:duration-200 ${
             expanded ? "max-w-[140px] opacity-100" : "max-w-0 opacity-0"
           }`}
         >

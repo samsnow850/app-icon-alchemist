@@ -10,8 +10,6 @@ import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
 import { generateZip, loadImage } from "@/lib/iconGenerator";
 import { useLocalizedHref } from "@/lib/routing";
-import SiteHeader from "@/components/SiteHeader";
-
 const Index = () => {
   const { t } = useTranslation();
   const localized = useLocalizedHref();
@@ -109,9 +107,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
+    <>
       <div className="container max-w-6xl py-16 md:py-28">
         {/* Editorial hero */}
         <header className="mb-20 text-center">
@@ -334,7 +330,7 @@ const Index = () => {
           </p>
         </footer>
       </div>
-    </div>
+    </>
   );
 };
 

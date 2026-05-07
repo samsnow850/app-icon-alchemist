@@ -7,6 +7,7 @@ import Index from "./pages/Index.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useLanguageSync } from "./lib/routing";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <LanguageSync>
+          <ScrollToTop />
           <Routes>
             {/* English (default, no prefix) */}
             <Route path="/" element={<Index />} />

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Upload, Download, Image as ImageIcon, Check, X, Loader2, AlertTriangle, Github } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
-import { generateZip, loadImage } from "@/lib/iconGenerator";
+import { buildPlatformPreviews, generateZip, loadImage, type PlatformPreviewRow } from "@/lib/iconGenerator";
 import { useLocalizedHref } from "@/lib/routing";
 import SiteHeader from "@/components/SiteHeader";
 
@@ -24,7 +24,14 @@ const Index = () => {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [warning, setWarning] = useState<string | null>(null);
+  const [gridPreview, setGridPreview] = useState<PlatformPreviewRow[]>([]);
+  const [gridLoading, setGridLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const previewUrlsRef = useRef<string[]>([]);
+
+  const revokePreviewBatch = useCallback((urls: string[]) => {
+    urls.forEach((u) => URL.revokeObjectURL(u));
+  }, []);
 
   const handleFile = useCallback(async (f: File) => {
     if (!f.type.startsWith("image/")) {
@@ -46,7 +53,6 @@ const Index = () => {
     } catch {
       toast.error(t("toast.loadFail"));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t]);
 
   const onDrop = useCallback(
@@ -71,6 +77,57 @@ const Index = () => {
   const totalSelected = useMemo(
     () => PLATFORMS.filter((p) => selected.has(p.id)).reduce((s, p) => s + p.count, 0),
     [selected],
+  );
+
+  useEffect(() => {
+    if (!img) {
+      revokePreviewBatch(previewUrlsRef.current);
+      previewUrlsRef.current = [];
+      setGridPreview([]);
+      setGridLoading(false);
+      return;
+    }
+
+    const platforms = PLATFORMS.filter((p) => selected.has(p.id));
+    if (platforms.length === 0) {
+      revokePreviewBatch(previewUrlsRef.current);
+      previewUrlsRef.current = [];
+      setGridPreview([]);
+      setGridLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    const staleUrls = previewUrlsRef.current.slice();
+
+    setGridLoading(true);
+
+    (async () => {
+      try {
+        const batches = await buildPlatformPreviews(img, selected);
+        if (cancelled) {
+          batches.forEach((b) => b.previews.forEach((x) => URL.revokeObjectURL(x.url)));
+          return;
+        }
+        revokePreviewBatch(staleUrls);
+        previewUrlsRef.current = batches.flatMap((b) => b.previews.map((x) => x.url));
+        setGridPreview(batches);
+      } finally {
+        if (!cancelled) setGridLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [img, selected, revokePreviewBatch]);
+
+  useEffect(
+    () => () => {
+      revokePreviewBatch(previewUrlsRef.current);
+      previewUrlsRef.current = [];
+    },
+    [revokePreviewBatch],
   );
 
   const handleGenerate = async () => {
@@ -106,6 +163,10 @@ const Index = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setWarning(null);
+    revokePreviewBatch(previewUrlsRef.current);
+    previewUrlsRef.current = [];
+    setGridPreview([]);
+    setGridLoading(false);
   };
 
   return (
@@ -300,6 +361,68 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        {img && (
+          <section className="mt-20 scroll-mt-24" aria-labelledby="preview-heading">
+            <div className="mb-8 flex flex-col gap-2 border-b border-border pb-6 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 id="preview-heading" className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
+                  {t("preview.title")}
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm text-foreground/60">{t("preview.hint")}</p>
+              </div>
+            </div>
+
+            {selected.size === 0 ? (
+              <p className="rounded-2xl border border-dashed border-border bg-card/50 px-6 py-10 text-center text-sm text-foreground/60">
+                {t("preview.selectPlatforms")}
+              </p>
+            ) : gridLoading ? (
+              <div className="flex items-center justify-center gap-3 rounded-2xl border border-border bg-card/50 py-16 text-sm text-foreground/70">
+                <Loader2 className="h-5 w-5 animate-spin shrink-0" aria-hidden />
+                {t("preview.loading")}
+              </div>
+            ) : (
+              <div className="space-y-14">
+                {gridPreview.map((block) => (
+                  <div key={block.platformId}>
+                    <h3 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/60">
+                      {t(`platforms.items.${block.platformId}.label`, {
+                        defaultValue: PLATFORMS.find((p) => p.id === block.platformId)?.label ?? block.platformId,
+                      })}
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                      {block.previews.map(({ spec, url }) => (
+                        <figure
+                          key={`${block.platformId}-${spec.name}`}
+                          className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                        >
+                          <div className="flex aspect-square items-center justify-center bg-secondary/40 p-2">
+                            <img
+                              src={url}
+                              alt=""
+                              className="max-h-full max-w-full object-contain"
+                              width={Math.min(spec.size, 256)}
+                              height={Math.min(spec.size, 256)}
+                            />
+                          </div>
+                          <figcaption className="space-y-0.5 border-t border-border px-2 py-2">
+                            <p className="truncate font-mono text-[10px] leading-tight text-foreground/80" title={spec.name}>
+                              {spec.name}
+                            </p>
+                            <p className="text-[10px] font-medium tabular-nums text-foreground/50">
+                              {t("preview.outputLabel", { size: spec.size })}
+                            </p>
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         <footer className="mt-28 border-t border-border pt-10">
           <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">

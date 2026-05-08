@@ -72,6 +72,13 @@ const en = {
       android: { label: "Android", description: "Launcher icons for hdpi, xhdpi, xxhdpi, xxxhdpi densities" },
     },
   },
+  preview: {
+    title: "Preview",
+    hint: "Each tile matches a PNG in your ZIP. Dimensions are the final output size in pixels.",
+    loading: "Building previews…",
+    selectPlatforms: "Select at least one platform to see previews.",
+    outputLabel: "{{size}}×{{size}} px",
+  },
   footer: {
     heading: "Free, forever.",
     body: "A public tool for designers and developers. No ads, no signup, no payments — every pixel processed in your browser.",

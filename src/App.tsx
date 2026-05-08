@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound.tsx";
 import SiteLayout from "./components/SiteLayout.tsx";
 import { useLanguageSync } from "./lib/routing";
 import ScrollToTop from "./components/ScrollToTop";
+import LoadingScreen from "./components/LoadingScreen";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <LoadingScreen />
       <BrowserRouter>
         <LanguageSync>
           <ScrollToTop />

@@ -55,10 +55,10 @@ export const SiteHeader = () => {
   return (
     <nav className="sticky top-3 z-40 w-full px-3 sm:top-4 sm:px-4">
       <div
-        className={`mx-auto flex items-center justify-between gap-3 rounded-full border border-border/60 bg-background/80 shadow-elegant backdrop-blur-md transition-[max-width,padding] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+        className={`mx-auto flex items-center justify-between rounded-full border border-border/60 bg-background/80 shadow-elegant backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           collapsed
-            ? "max-w-fit px-2 py-1.5 sm:px-3 sm:py-2"
-            : "max-w-6xl px-3 py-2 sm:px-5 sm:py-2.5"
+            ? "max-w-2xl gap-4 px-3 py-1.5 sm:px-4 sm:py-2"
+            : "max-w-6xl gap-3 px-3 py-2 sm:px-5 sm:py-2.5"
         }`}
       >
         <Link to={localized("/")} className="flex items-center gap-2.5">
@@ -69,7 +69,7 @@ export const SiteHeader = () => {
             <span className="h-2 w-2 rounded-sm bg-foreground" />
           </div>
           <span
-            className={`overflow-hidden whitespace-nowrap text-sm font-semibold tracking-tight transition-all duration-300 ${
+            className={`overflow-hidden whitespace-nowrap text-sm font-semibold tracking-tight transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
               collapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"
             }`}
           >
@@ -77,8 +77,8 @@ export const SiteHeader = () => {
           </span>
         </Link>
         <div
-          className={`hidden items-center overflow-hidden transition-all duration-500 md:flex ${
-            collapsed ? "max-w-0 gap-0 opacity-0" : "max-w-[600px] gap-8 opacity-100"
+          className={`hidden items-center md:flex transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            collapsed ? "gap-5" : "gap-8"
           }`}
         >
           <Link to={localized("/#generator")} className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
@@ -96,10 +96,12 @@ export const SiteHeader = () => {
             href="https://github.com/samsnow850/app-icon-alchemist"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+            className={`inline-flex items-center gap-1.5 rounded-full bg-primary text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/90 ${
+              collapsed ? "h-8 px-3" : "h-9 px-4"
+            }`}
           >
             <span
-              className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${
+              className={`overflow-hidden whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 collapsed ? "max-w-0 opacity-0" : "max-w-[120px] opacity-100"
               }`}
             >

@@ -68,16 +68,26 @@ export const SiteHeader = () => {
             <span className="h-2 w-2 rounded-sm bg-foreground/30" />
             <span className="h-2 w-2 rounded-sm bg-foreground" />
           </div>
-          <span className="text-sm font-semibold tracking-tight">Icon Forge</span>
+          <span
+            className={`overflow-hidden whitespace-nowrap text-sm font-semibold tracking-tight transition-all duration-300 ${
+              collapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"
+            }`}
+          >
+            Icon Forge
+          </span>
         </Link>
-        <div className="hidden items-center gap-8 md:flex">
-          <Link to={localized("/#generator")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+        <div
+          className={`hidden items-center overflow-hidden transition-all duration-500 md:flex ${
+            collapsed ? "max-w-0 gap-0 opacity-0" : "max-w-[600px] gap-8 opacity-100"
+          }`}
+        >
+          <Link to={localized("/#generator")} className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
             {t("nav.generator")}
           </Link>
-          <Link to={localized("/#platforms")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+          <Link to={localized("/#platforms")} className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
             {t("nav.platforms")}
           </Link>
-          <Link to={localized("/privacy")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+          <Link to={localized("/privacy")} className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
             {t("nav.privacy")}
           </Link>
         </div>
@@ -88,7 +98,13 @@ export const SiteHeader = () => {
             rel="noopener noreferrer"
             className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            {t("nav.github")}
+            <span
+              className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${
+                collapsed ? "max-w-0 opacity-0" : "max-w-[120px] opacity-100"
+              }`}
+            >
+              {t("nav.github")}
+            </span>
             <span aria-hidden>›</span>
           </a>
           <LanguageSwitcher />

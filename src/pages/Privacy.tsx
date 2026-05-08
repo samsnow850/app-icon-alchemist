@@ -1,15 +1,12 @@
 import { Shield, Lock, UserX, Cpu } from "lucide-react";
 import { Trans, useTranslation } from "react-i18next";
-import SiteHeader from "@/components/SiteHeader";
-
 const Privacy = () => {
   const { t } = useTranslation();
 
   const bullets = t("privacy.sections.bullets", { returnObjects: true }) as string[];
 
   return (
-    <div className="min-h-screen bg-background bg-gradient-mesh">
-      <SiteHeader />
+    <div className="flex flex-1 flex-col bg-background bg-gradient-mesh">
       <div className="container max-w-3xl py-12 md:py-20">
 
         <header className="mt-8 mb-10">

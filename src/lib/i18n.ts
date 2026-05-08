@@ -93,6 +93,11 @@ const en = {
     generated: "Generated {{count}} icons!",
     genFail: "Something went wrong while generating.",
   },
+  notFound: {
+    title: "404",
+    description: "That page does not exist.",
+    home: "Back to generator",
+  },
   privacy: {
     back: "Back to generator",
     kicker: "Privacy Policy",

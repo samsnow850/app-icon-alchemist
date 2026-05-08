@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import SiteLayout from "./components/SiteLayout.tsx";
 import { useLanguageSync } from "./lib/routing";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -25,16 +26,18 @@ const App = () => (
         <LanguageSync>
           <ScrollToTop />
           <Routes>
-            {/* English (default, no prefix) */}
-            <Route path="/" element={<Index />} />
-            <Route path="/privacy" element={<Privacy />} />
+            <Route element={<SiteLayout />}>
+              {/* English (default, no prefix) */}
+              <Route path="/" element={<Index />} />
+              <Route path="/privacy" element={<Privacy />} />
 
-            {/* Localized routes */}
-            <Route path="/:lang" element={<Index />} />
-            <Route path="/:lang/privacy" element={<Privacy />} />
+              {/* Localized routes */}
+              <Route path="/:lang" element={<Index />} />
+              <Route path="/:lang/privacy" element={<Privacy />} />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Routes>
         </LanguageSync>
       </BrowserRouter>

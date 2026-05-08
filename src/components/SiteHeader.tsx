@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,8 @@ export const SiteHeader = () => {
   const { t } = useTranslation();
   const localized = useLocalizedHref();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [shrunk, setShrunk] = useState(false);
+  const lastY = useRef(0);
   const location = useLocation();
 
   // Close on route/hash change
@@ -26,11 +28,39 @@ export const SiteHeader = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
+  // Shrink on scroll down, expand on scroll up or near top
+  useEffect(() => {
+    lastY.current = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY.current;
+      if (y < 40) {
+        setShrunk(false);
+      } else if (delta > 4 && y > 80) {
+        setShrunk(true);
+      } else if (delta < -4) {
+        setShrunk(false);
+      }
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const close = () => setMenuOpen(false);
+
+
+  const collapsed = shrunk && !menuOpen;
 
   return (
     <nav className="sticky top-3 z-40 w-full px-3 sm:top-4 sm:px-4">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-border/60 bg-background/80 px-3 py-2 shadow-elegant backdrop-blur-md sm:px-5 sm:py-2.5">
+      <div
+        className={`mx-auto flex items-center justify-between gap-3 rounded-full border border-border/60 bg-background/80 shadow-elegant backdrop-blur-md transition-[max-width,padding] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+          collapsed
+            ? "max-w-fit px-2 py-1.5 sm:px-3 sm:py-2"
+            : "max-w-6xl px-3 py-2 sm:px-5 sm:py-2.5"
+        }`}
+      >
         <Link to={localized("/")} className="flex items-center gap-2.5">
           <div className="grid grid-cols-2 gap-0.5">
             <span className="h-2 w-2 rounded-sm bg-foreground" />
@@ -38,16 +68,26 @@ export const SiteHeader = () => {
             <span className="h-2 w-2 rounded-sm bg-foreground/30" />
             <span className="h-2 w-2 rounded-sm bg-foreground" />
           </div>
-          <span className="text-sm font-semibold tracking-tight">Icon Forge</span>
+          <span
+            className={`overflow-hidden whitespace-nowrap text-sm font-semibold tracking-tight transition-all duration-300 ${
+              collapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"
+            }`}
+          >
+            Icon Forge
+          </span>
         </Link>
-        <div className="hidden items-center gap-8 md:flex">
-          <Link to={localized("/#generator")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+        <div
+          className={`hidden items-center overflow-hidden transition-all duration-500 md:flex ${
+            collapsed ? "max-w-0 gap-0 opacity-0" : "max-w-[600px] gap-8 opacity-100"
+          }`}
+        >
+          <Link to={localized("/#generator")} className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
             {t("nav.generator")}
           </Link>
-          <Link to={localized("/#platforms")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+          <Link to={localized("/#platforms")} className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
             {t("nav.platforms")}
           </Link>
-          <Link to={localized("/privacy")} className="text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
+          <Link to={localized("/privacy")} className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground">
             {t("nav.privacy")}
           </Link>
         </div>
@@ -58,7 +98,13 @@ export const SiteHeader = () => {
             rel="noopener noreferrer"
             className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            {t("nav.github")}
+            <span
+              className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${
+                collapsed ? "max-w-0 opacity-0" : "max-w-[120px] opacity-100"
+              }`}
+            >
+              {t("nav.github")}
+            </span>
             <span aria-hidden>›</span>
           </a>
           <LanguageSwitcher />

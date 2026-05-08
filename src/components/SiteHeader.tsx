@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,8 @@ export const SiteHeader = () => {
   const { t } = useTranslation();
   const localized = useLocalizedHref();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [shrunk, setShrunk] = useState(false);
+  const lastY = useRef(0);
   const location = useLocation();
 
   // Close on route/hash change
@@ -26,7 +28,27 @@ export const SiteHeader = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
+  // Shrink on scroll down, expand on scroll up or near top
+  useEffect(() => {
+    lastY.current = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY.current;
+      if (y < 40) {
+        setShrunk(false);
+      } else if (delta > 4 && y > 80) {
+        setShrunk(true);
+      } else if (delta < -4) {
+        setShrunk(false);
+      }
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const close = () => setMenuOpen(false);
+
 
   return (
     <nav className="sticky top-3 z-40 w-full px-3 sm:top-4 sm:px-4">

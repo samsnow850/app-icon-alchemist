@@ -5,11 +5,14 @@ import { useTranslation } from "react-i18next";
 import { useLocalizedHref } from "@/lib/routing";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
+const LG_MIN = "(min-width: 1024px)";
+
 export const SiteHeader = () => {
   const { t } = useTranslation();
   const localized = useLocalizedHref();
   const [menuOpen, setMenuOpen] = useState(false);
   const [shrunk, setShrunk] = useState(false);
+  const [isLgUp, setIsLgUp] = useState(false);
   const lastY = useRef(0);
   const location = useLocation();
 
@@ -27,6 +30,15 @@ export const SiteHeader = () => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
+
+  // Large-desktop only: shrink bar on scroll (tablets / md nav stay full width)
+  useEffect(() => {
+    const mq = window.matchMedia(LG_MIN);
+    const sync = () => setIsLgUp(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   // Shrink on scroll down, expand on scroll up or near top
   useEffect(() => {
@@ -49,8 +61,7 @@ export const SiteHeader = () => {
 
   const close = () => setMenuOpen(false);
 
-
-  const collapsed = shrunk && !menuOpen;
+  const collapsed = shrunk && !menuOpen && isLgUp;
 
   return (
     <nav className="sticky top-3 z-40 w-full px-3 sm:top-4 sm:px-4">
@@ -96,18 +107,28 @@ export const SiteHeader = () => {
             href="https://github.com/samsnow850/app-icon-alchemist"
             target="_blank"
             rel="noopener noreferrer"
-            className={`inline-flex items-center gap-1.5 rounded-full bg-primary text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/90 ${
-              collapsed ? "h-8 px-3" : "h-9 px-4"
+            className={`inline-flex items-center justify-center rounded-full bg-primary text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/90 ${
+              collapsed ? "h-8 w-8 shrink-0 gap-0 p-0" : "h-9 gap-1.5 px-4"
             }`}
           >
             <span
               className={`overflow-hidden whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                collapsed ? "max-w-0 opacity-0" : "max-w-[120px] opacity-100"
+                collapsed ? "sr-only" : "max-w-[120px] opacity-100"
               }`}
             >
               {t("nav.github")}
             </span>
-            <span aria-hidden>›</span>
+            {!collapsed && <span aria-hidden>›</span>}
+            {collapsed && (
+              <img
+                src={`${import.meta.env.BASE_URL}github-mark-circle.svg`}
+                alt=""
+                width={22}
+                height={22}
+                className="size-[22px] shrink-0 rounded-full object-cover"
+                draggable={false}
+              />
+            )}
           </a>
           <LanguageSwitcher />
         </div>

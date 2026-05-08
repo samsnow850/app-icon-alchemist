@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { PLATFORMS, type Platform } from "./iconSizes";
+import { PLATFORMS, type IconSpec, type Platform } from "./iconSizes";
 
 export async function loadImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -72,4 +72,20 @@ export async function generatePreview(img: HTMLImageElement, platform: Platform)
     }),
   );
   return previews;
+}
+
+export type PlatformPreviewRow = {
+  platformId: string;
+  previews: { spec: IconSpec; url: string }[];
+};
+
+/** Thumbnail previews for each icon spec on the platforms the user selected. Caller must revoke `url` with `URL.revokeObjectURL` when discarding. */
+export async function buildPlatformPreviews(img: HTMLImageElement, selected: Set<string>): Promise<PlatformPreviewRow[]> {
+  const platforms = PLATFORMS.filter((p) => selected.has(p.id));
+  return Promise.all(
+    platforms.map(async (p) => ({
+      platformId: p.id,
+      previews: await generatePreview(img, p),
+    })),
+  );
 }

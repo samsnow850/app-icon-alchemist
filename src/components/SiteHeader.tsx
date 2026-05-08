@@ -50,9 +50,17 @@ export const SiteHeader = () => {
   const close = () => setMenuOpen(false);
 
 
+  const collapsed = shrunk && !menuOpen;
+
   return (
     <nav className="sticky top-3 z-40 w-full px-3 sm:top-4 sm:px-4">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-border/60 bg-background/80 px-3 py-2 shadow-elegant backdrop-blur-md sm:px-5 sm:py-2.5">
+      <div
+        className={`mx-auto flex items-center justify-between gap-3 rounded-full border border-border/60 bg-background/80 shadow-elegant backdrop-blur-md transition-[max-width,padding] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+          collapsed
+            ? "max-w-fit px-2 py-1.5 sm:px-3 sm:py-2"
+            : "max-w-6xl px-3 py-2 sm:px-5 sm:py-2.5"
+        }`}
+      >
         <Link to={localized("/")} className="flex items-center gap-2.5">
           <div className="grid grid-cols-2 gap-0.5">
             <span className="h-2 w-2 rounded-sm bg-foreground" />

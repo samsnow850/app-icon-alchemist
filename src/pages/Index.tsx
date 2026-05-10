@@ -213,6 +213,8 @@ const Index = () => {
           </div>
         </header>
 
+        <IconPlayground sourceImg={img} />
+
         <div id="generator" className="grid gap-6 lg:grid-cols-5">
           {/* Left: Upload + Settings */}
           <div className="space-y-6 lg:col-span-3">

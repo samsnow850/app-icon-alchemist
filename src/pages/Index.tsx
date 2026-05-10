@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
 import { buildPlatformPreviews, generateZip, loadImage, type PlatformPreviewRow } from "@/lib/iconGenerator";
+import IconPlayground from "@/components/IconPlayground";
 
 const Index = () => {
   const { t } = useTranslation();

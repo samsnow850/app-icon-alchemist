@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { PLATFORMS, TOTAL_ICONS } from "@/lib/iconSizes";
 import { buildPlatformPreviews, generateZip, loadImage, type PlatformPreviewRow } from "@/lib/iconGenerator";
+import IconPlayground from "@/components/IconPlayground";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -211,6 +212,8 @@ const Index = () => {
             </p>
           </div>
         </header>
+
+        <IconPlayground sourceImg={img} />
 
         <div id="generator" className="grid gap-6 lg:grid-cols-5">
           {/* Left: Upload + Settings */}

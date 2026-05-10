@@ -98,6 +98,18 @@ const en = {
     description: "That page does not exist.",
     home: "Back to generator",
   },
+  demo: {
+    kicker: "Try it live",
+    title: "Tweak it. See it everywhere.",
+    subtitle: "Drag the sliders to feel how your icon will look across iOS, Android, macOS and the web — instantly.",
+    background: "Background",
+    padding: "Padding",
+    radius: "Corner radius",
+    useSample: "Use sample",
+    useMine: "Use my icon",
+    sendToGenerator: "Jump to generator",
+    tiles: { ios: "iOS", android: "Android", macos: "macOS", web: "Web" },
+  },
   privacy: {
     back: "Back to generator",
     kicker: "Privacy Policy",

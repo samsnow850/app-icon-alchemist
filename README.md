@@ -68,24 +68,6 @@ Other niceties:
 
 ---
 
-## 🧑‍💻 Run locally
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/samsnow850/app-icon-alchemist.git
-cd app-icon-alchemist
-
-# 2. Install dependencies
-npm install   # or: bun install
-
-# 3. Start the dev server
-npm run dev   # or: bun run dev
-```
-
-Then open [http://localhost:8080](http://localhost:8080).
-
----
-
 ## 🔐 Privacy
 
 Your uploaded image **never leaves your browser**. All resizing and ZIP creation happens locally on your device — there is no upload step, no analytics on your files, and no account required. See the in-app [Privacy Policy](./src/pages/Privacy.tsx) for details.
